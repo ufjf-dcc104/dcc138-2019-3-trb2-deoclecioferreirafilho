@@ -15,6 +15,118 @@
 
 <body>
 
+    <canvas></canvas>
+    <script>
+        var assetsMng = new AssetsManager();
+        assetsMng.loadImage("image", "assets/blowharder.png");
+        assetsMng.loadImage("tiles", "assets/tiles.png");
+        assetsMng.loadImage("blocos", "assets/blocos.png");
+        assetsMng.loadImage("grama", "assets/grass.jpg");
+        assetsMng.loadImage("grunch", "assets/grunch.png");
+        assetsMng.loadImage("ladygreen", "assets/ladygreen.png");
+        assetsMng.loadImage("osos", "assets/osos.png");
+        // assetsMng.loadAudio("shot", "assets/shot.mp3");
+
+        var canvas = document.querySelector("canvas");
+        canvas.width = 640;
+        canvas.height = 640;
+        var ctx = canvas.getContext("2d");
+        var teclas = {
+            esquerda: 0,
+            cima: 0,
+            direita: 0,
+            baixo: 0,
+            espaco: 0
+        }
+
+        var mapa = new Map({
+            COLUMNS: 20, LINES: 20, m:
+                [
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                    [1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+                    [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+                ]
+        });
+
+        var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
+        mapa.scene = cena1;
+
+
+
+
+        addEventListener("keydown", function (e) {
+                switch (e.keyCode) {
+                    case 32:
+                        teclas.espaco = 1;
+                        break;
+                    case 37:
+                        teclas.esquerda = 1;
+                        break;
+                    case 38:
+                        teclas.cima = 1;
+                        break;
+                    case 39:
+                        teclas.direita = 1;
+                        break;
+                    case 40:
+                        teclas.baixo = 1;
+                        break;
+                }
+            });
+            addEventListener("keyup", function (e) {
+                switch (e.keyCode) {
+                    case 32:
+                        teclas.espaco = 0;
+                        break;
+                    case 37:
+                        teclas.esquerda = 0;
+                        break;
+                    case 38:
+                        teclas.cima = 0;
+                        break;
+                    case 39:
+                        teclas.direita = 0;
+                        break;
+                    case 40:
+                        teclas.baixo = 0;
+                        break;
+                }
+            });
+
+            function passo(t) {
+                dt = (t - anterior) / 1000;
+                if (assetsMng.progresso() === 100) {
+                    cena1.passo(dt);
+
+                }
+                anterior = t;
+                //ctx.fillText(1 / dt, 10, 20);
+                requestAnimationFrame(passo);
+            }
+
+            var dt, anterior = 0;
+            requestAnimationFrame(passo);
+        
+
+
+    </script>
 </body>
 
 </html>
