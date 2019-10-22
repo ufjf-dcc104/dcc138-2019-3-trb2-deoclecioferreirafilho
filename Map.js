@@ -35,11 +35,11 @@ Map.prototype.desenhar = function (ctx) {
                     y = 0;
                    // x = 3;
                    // y = 5;
-                    ctx.drawImage(this.scene.assets.img("grama"),
+                    ctx.drawImage(this.scene.assets.img("tiles"),
                         x * 64,
                         y * 64,
-                        64,
-                        64,
+                        32,
+                        32,
                         c * this.SIZE,
                         l * this.SIZE,
                         this.SIZE,
@@ -51,11 +51,11 @@ Map.prototype.desenhar = function (ctx) {
                     y = 0;
                    // x = 69;
                    // y = 17;
-                   ctx.drawImage(this.scene.assets.img("tiles"),
-                       x * 32,
-                       y * 32,
-                       32,
-                       32,
+                   ctx.drawImage(this.scene.assets.img("blocos"),
+                       x * 64,
+                       y * 64,
+                       64,
+                       64,
                        c * this.SIZE,
                        l * this.SIZE,
                        this.SIZE,

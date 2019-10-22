@@ -68,62 +68,111 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
+        var pc = new Sprite({ x: 500, y: 60, w: 15, h: 5, speed: 2, pose: 3, frame: 37, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
+        cena1.adicionar(pc);
+//x: 46, y: 60,
+        function desenhaPC(ctx) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.strokeStyle = "white";
+            // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
 
+            ctx.drawImage(
+                this.scene.assets.img("grunch"),
+               // (this.poses[this.pose].c + Math.floor(this.frame)) * 64,this.poses[this.pose].l * 64,
+                Math.floor(this.frame) * 64,
+                this.pose * 64,
+                64,
+                64,
+                -32 / 2,
+                1 - 32,
+                32,
+                32
+            );
+
+            ctx.restore();
+        }
+
+        function porTeclasDirecionais(teclas) {
+            return function () {
+                if (teclas.esquerda && !teclas.direita) { this.pose = 6; console.log( this.pose)}
+                if (teclas.direita && !teclas.esquerda) { this.pose = 4; }
+                if (teclas.esquerda === teclas.direita) { this.pose = 1; }
+
+                if (teclas.cima) { this.pose = 8; }
+                if (teclas.baixo) { this.pose = 2; }
+                if (teclas.cima === teclas.baixo) { this.pose = 1; }
+    /*
+                if (teclas.espaco && this.cooldown <= 0) {
+                    var tiro = new Sprite({
+                        x: this.x, y: this.y,
+                        a: this.a - 0.1 + 0.2 * Math.random(),
+                        vm: 240, color: "green", w: 4, h: 4,
+                        props: { tipo: "tiro" }
+                    });
+                    this.scene.adicionar(tiro);
+                    this.cooldown = 0.1;
+                    assetsMng.play("shot");
+                }
+                */
+            }
+        }
 
 
         addEventListener("keydown", function (e) {
-                switch (e.keyCode) {
-                    case 32:
-                        teclas.espaco = 1;
-                        break;
-                    case 37:
-                        teclas.esquerda = 1;
-                        break;
-                    case 38:
-                        teclas.cima = 1;
-                        break;
-                    case 39:
-                        teclas.direita = 1;
-                        break;
-                    case 40:
-                        teclas.baixo = 1;
-                        break;
-                }
-            });
-            addEventListener("keyup", function (e) {
-                switch (e.keyCode) {
-                    case 32:
-                        teclas.espaco = 0;
-                        break;
-                    case 37:
-                        teclas.esquerda = 0;
-                        break;
-                    case 38:
-                        teclas.cima = 0;
-                        break;
-                    case 39:
-                        teclas.direita = 0;
-                        break;
-                    case 40:
-                        teclas.baixo = 0;
-                        break;
-                }
-            });
-
-            function passo(t) {
-                dt = (t - anterior) / 1000;
-                if (assetsMng.progresso() === 100) {
-                    cena1.passo(dt);
-
-                }
-                anterior = t;
-                //ctx.fillText(1 / dt, 10, 20);
-                requestAnimationFrame(passo);
+            switch (e.keyCode) {
+                case 32:
+                    teclas.espaco = 1;
+                    break;
+                case 37:
+                    teclas.esquerda = 1;
+                    break;
+                case 38:
+                    teclas.cima = 1;
+                    break;
+                case 39:
+                    teclas.direita = 1;
+                    break;
+                case 40:
+                    teclas.baixo = 1;
+                    break;
             }
+        });
+        addEventListener("keyup", function (e) {
+            switch (e.keyCode) {
+                case 32:
+                    teclas.espaco = 0;
+                    break;
+                case 37:
+                    teclas.esquerda = 0;
+                    break;
+                case 38:
+                    teclas.cima = 0;
+                    break;
+                case 39:
+                    teclas.direita = 0;
+                    break;
+                case 40:
+                    teclas.baixo = 0;
+                    break;
+            }
+        });
 
-            var dt, anterior = 0;
+        function passo(t) {
+            dt = (t - anterior) / 1000;
+            if (assetsMng.progresso() === 100) {
+                cena1.passo(dt);
+
+            }
+            anterior = t;
+            //ctx.fillText(1 / dt, 10, 20);
             requestAnimationFrame(passo);
-        
+        }
+
+        var dt, anterior = 0;
+        requestAnimationFrame(passo);
+
 
 
     </script>
