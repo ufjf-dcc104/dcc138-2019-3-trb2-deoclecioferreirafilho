@@ -68,9 +68,9 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
-        var pc = new Sprite({ x: 500, y: 60, w: 15, h: 5, speed: 2, pose: 3, frame: 37, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
+        var pc = new Sprite({ x: 500, y: 60, w: 15, h: 5, speed: 2, pose: 3, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
         cena1.adicionar(pc);
-//x: 46, y: 60,
+        //x: 46, y: 60,
         function desenhaPC(ctx) {
             ctx.save();
             ctx.translate(this.x, this.y);
@@ -80,9 +80,10 @@
 
             ctx.drawImage(
                 this.scene.assets.img("grunch"),
-               // (this.poses[this.pose].c + Math.floor(this.frame)) * 64,this.poses[this.pose].l * 64,
-                Math.floor(this.frame) * 64,
-                this.pose * 64,
+                // (this.poses[this.pose].c + Math.floor(this.frame)) * 64,this.poses[this.pose].l * 64,
+                //Math.floor(this.frame) * 64,
+                this.frame,
+                this.pose,
                 64,
                 64,
                 -32 / 2,
@@ -96,26 +97,52 @@
 
         function porTeclasDirecionais(teclas) {
             return function () {
-                if (teclas.esquerda && !teclas.direita) { this.pose = 6; console.log( this.pose)}
-                if (teclas.direita && !teclas.esquerda) { this.pose = 4; }
-                if (teclas.esquerda === teclas.direita) { this.pose = 1; }
+                if (teclas.esquerda && !teclas.direita) {
+                    this.x -= this.speed;
+                    this.pose = (8 * 64) + (64 * 1)
 
-                if (teclas.cima) { this.pose = 8; }
-                if (teclas.baixo) { this.pose = 2; }
-                if (teclas.cima === teclas.baixo) { this.pose = 1; }
-    /*
-                if (teclas.espaco && this.cooldown <= 0) {
-                    var tiro = new Sprite({
-                        x: this.x, y: this.y,
-                        a: this.a - 0.1 + 0.2 * Math.random(),
-                        vm: 240, color: "green", w: 4, h: 4,
-                        props: { tipo: "tiro" }
-                    });
-                    this.scene.adicionar(tiro);
-                    this.cooldown = 0.1;
-                    assetsMng.play("shot");
                 }
-                */
+                if (teclas.direita && !teclas.esquerda) {
+                    this.x += this.speed;
+                    this.pose = (8 * 64) + (64 * 3)
+
+                }
+
+
+                if (teclas.cima) {
+                    this.y -= this.speed;
+                    this.pose = (8 * 64) + (64 * 0)
+
+                }
+                if (teclas.baixo) {
+                    this.y += this.speed;
+                    this.pose = (8 * 64) + (64 * 2)
+
+                }
+                if (teclas.esquerda || teclas.direita || teclas.cima || teclas.baixo) {
+                    this.countAnim++;
+                    if (this.countAnim >= 40) { this.countAnim = 0 };
+                    this.frame = Math.floor(this.countAnim / 5) * 64;
+                } else {
+                    this.frame = 0;
+                    this.countAnim = 0;
+                }
+
+
+
+                /*
+                            if (teclas.espaco && this.cooldown <= 0) {
+                                var tiro = new Sprite({
+                                    x: this.x, y: this.y,
+                                    a: this.a - 0.1 + 0.2 * Math.random(),
+                                    vm: 240, color: "green", w: 4, h: 4,
+                                    props: { tipo: "tiro" }
+                                });
+                                this.scene.adicionar(tiro);
+                                this.cooldown = 0.1;
+                                assetsMng.play("shot");
+                            }
+                            */
             }
         }
 
@@ -172,8 +199,6 @@
 
         var dt, anterior = 0;
         requestAnimationFrame(passo);
-
-
 
     </script>
 </body>
