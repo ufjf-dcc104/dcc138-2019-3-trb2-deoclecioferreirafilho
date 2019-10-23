@@ -4,6 +4,7 @@ function Map(modelo) {
         LINES: 20,
         COLUMNS: 20,
         SIZE: 32,
+        muros: [],
         scene: undefined,
         assets: undefined
     }
@@ -49,8 +50,6 @@ Map.prototype.desenhar = function (ctx) {
                 case 1:
                     x = 0;
                     y = 0;
-                   // x = 69;
-                   // y = 17;
                    ctx.drawImage(this.scene.assets.img("blocos"),
                        x * 64,
                        y * 64,
@@ -61,7 +60,16 @@ Map.prototype.desenhar = function (ctx) {
                        this.SIZE,
                        this.SIZE
                    );
+                    var muro = {
+                        x: c * this.SIZE,
+                        y: l * this.SIZE,
+                        width: this.SIZE,
+                        height: this.SIZE
+                    };
+
+                    this.muros.push(muro);
                     
+
                     break;
                 default:
                     cor = "black";

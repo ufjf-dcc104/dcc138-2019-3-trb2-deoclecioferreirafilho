@@ -68,7 +68,7 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
-        var pc = new Sprite({ x: 500, y: 60, w: 15, h: 5, speed: 2, pose: 3, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
+        var pc = new Sprite({ x: 60, y: 60, w: 30, h: 5, speed: 2, pose: 10*64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
         cena1.adicionar(pc);
         //x: 46, y: 60,
         function desenhaPC(ctx) {
@@ -86,13 +86,31 @@
                 this.pose,
                 64,
                 64,
-                -32 / 2,
-                1 - 32,
-                32,
-                32
+                -64 / 2,
+                1 - 64,
+                64,
+                64
             );
 
             ctx.restore();
+        }
+
+        function blocoRet(retA, retB){
+            var distX = (retA.x + retA.width/2) - (retB.x + retB.width/2);
+            var distY = (retA.y + retA.height / 2) - (retB.y + retB.height / 2);
+            var somaWidth = (retA.width + retB.width)/2;
+            var somaHeight = (retA.height + retB.height)/2;
+
+            if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight){
+                var overlapX = somaWidth - Math.abs(distX);
+                var overlapY = somaHeight - Math.abs(distY);
+
+                if (overlapX > overlapY){
+                    retA.y = distY > 0 ? retA.y + overlapY : retA.y - overlapY;
+                }else {
+                    retA.x = distX > 0 ? retA.x + overlapx : retA.x - overlapX;
+                }
+            }
         }
 
         function porTeclasDirecionais(teclas) {
@@ -109,12 +127,12 @@
                 }
 
 
-                if (teclas.cima) {
+                if (teclas.cima && !teclas.baixo) {
                     this.y -= this.speed;
                     this.pose = (8 * 64) + (64 * 0)
 
                 }
-                if (teclas.baixo) {
+                if (teclas.baixo && !teclas.cima) {
                     this.y += this.speed;
                     this.pose = (8 * 64) + (64 * 2)
 
@@ -128,7 +146,10 @@
                     this.countAnim = 0;
                 }
 
-
+                for ( var i in mapa.muros){
+                    var muro = mapa.muros[i];
+                    blocoRet(this, muro);
+                }
 
                 /*
                             if (teclas.espaco && this.cooldown <= 0) {

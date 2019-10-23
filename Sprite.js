@@ -66,12 +66,10 @@ Sprite.prototype.mover = function (dt) {
 Sprite.prototype.moverOrtogonal = function (dt) {
 
     /*
-    this.x += this.speed;
-    this.y += this.speed;
     this.a = this.a + this.va*dt;
-    this.vx = this.vx + this.ax * dt;//- this.vx * 0.9 * dt;
-    this.vy = this.vy + this.ay * dt /*+ 120 * dt;
-    */
+    this.vx = this.vx + this.ax * dt- this.vx * 0.9 * dt;
+    this.vy = this.vy + this.ay * dt + 120 * dt;
+ */
 
     this.mc = Math.floor(this.x / this.scene.map.SIZE);
     this.ml = Math.floor(this.y / this.scene.map.SIZE);
