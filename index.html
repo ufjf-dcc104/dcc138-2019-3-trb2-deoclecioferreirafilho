@@ -38,7 +38,6 @@
             baixo: 0,
             espaco: 0
         }
-
         var mapa = new Map({
             COLUMNS: 20, LINES: 20, m:
                 [
@@ -65,12 +64,17 @@
                 ]
         });
 
+
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
-        var pc = new Sprite({ x: 60, y: 60, w: 30, h: 5, speed: 2, pose: 10*64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
+
+
+        var pc = new Sprite({ x: 60, y: 60, w: 30, h: 5, speed: 2, pose: 10 * 64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
         cena1.adicionar(pc);
-        //x: 46, y: 60,
+
+        // cena1.desenharMuro();
+
         function desenhaPC(ctx) {
             ctx.save();
             ctx.translate(this.x, this.y);
@@ -92,40 +96,65 @@
                 64
             );
 
+
             ctx.restore();
         }
 
-        function blocoRet(retA, retB){
-            var distX = (retA.x + retA.width/2) - (retB.x + retB.width/2);
-            var distY = (retA.y + retA.height / 2) - (retB.y + retB.height / 2);
-            var somaWidth = (retA.width + retB.width)/2;
-            var somaHeight = (retA.height + retB.height)/2;
-
-            if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight){
-                var overlapX = somaWidth - Math.abs(distX);
-                var overlapY = somaHeight - Math.abs(distY);
-
-                if (overlapX > overlapY){
-                    retA.y = distY > 0 ? retA.y + overlapY : retA.y - overlapY;
-                }else {
-                    retA.x = distX > 0 ? retA.x + overlapx : retA.x - overlapX;
+        function blocoRet(pcA, muroB) {
+            var distX = (pcA.x + (pcA.w/2)) - (muroB.x + (muroB.width / 2));
+            var distY = (pcA.y + (pcA.h/2)) - (muroB.y + (muroB.height / 2));
+            var somaWidth = (pcA.w + muroB.width) / 2;
+            var somaHeight = (pcA.h + muroB.height) / 2;
+           // console.log(distX  , distY);
+          //  console.log(somaWidth, somaHeight);
+           
+           if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight) {
+               var overlapX = somaWidth - Math.abs(distX);
+               var overlapY = somaHeight - Math.abs(distY);
+              //  console.log(overlapX, overlapY);
+               
+                if (overlapX > overlapY) {
+                    pcA.y = distY > 0 ? pcA.y + overlapY : pcA.y - overlapY;
+                } else {
+                    pcA.x = distX > 0 ? pcA.x + overlapX : pcA.x - overlapX;
                 }
             }
         }
+
+        var muros = [];
+        function desenhaMuro() {
+            for (var c = 0; c < mapa.COLUMNS; c++) {
+                for (var l = 0; l < mapa.LINES; l++) {
+
+                    if (mapa.m[c][l] === 1) {
+                        var muro = {
+                            x: c * mapa.SIZE,
+                            y: l * mapa.SIZE,
+                            width: mapa.SIZE,
+                            height: mapa.SIZE
+                        };
+                        muros.push(muro);
+                       // console.log(muro);
+                       // console.log(muro.x, muro.y);
+                    }
+                }
+               //console.log(muros[c]);
+            }
+        }
+
+        desenhaMuro();
 
         function porTeclasDirecionais(teclas) {
             return function () {
                 if (teclas.esquerda && !teclas.direita) {
                     this.x -= this.speed;
                     this.pose = (8 * 64) + (64 * 1)
-
                 }
                 if (teclas.direita && !teclas.esquerda) {
                     this.x += this.speed;
                     this.pose = (8 * 64) + (64 * 3)
 
                 }
-
 
                 if (teclas.cima && !teclas.baixo) {
                     this.y -= this.speed;
@@ -141,15 +170,21 @@
                     this.countAnim++;
                     if (this.countAnim >= 40) { this.countAnim = 0 };
                     this.frame = Math.floor(this.countAnim / 5) * 64;
+
+
+                    for (var i = 0;i < muros.length; i++) {
+                        var muro = muros[i];
+                        blocoRet(this, muro);
+                        console.log(muros[i]);
+                        // console.log(mapa.muros[1])
+                        //console.log(muro.x);
+                    }
+
                 } else {
                     this.frame = 0;
                     this.countAnim = 0;
                 }
 
-                for ( var i in mapa.muros){
-                    var muro = mapa.muros[i];
-                    blocoRet(this, muro);
-                }
 
                 /*
                             if (teclas.espaco && this.cooldown <= 0) {
@@ -163,9 +198,10 @@
                                 this.cooldown = 0.1;
                                 assetsMng.play("shot");
                             }
-                            */
+                */
             }
         }
+
 
 
         addEventListener("keydown", function (e) {
@@ -207,6 +243,7 @@
             }
         });
 
+
         function passo(t) {
             dt = (t - anterior) / 1000;
             if (assetsMng.progresso() === 100) {
@@ -214,7 +251,10 @@
 
             }
             anterior = t;
-            //ctx.fillText(1 / dt, 10, 20);
+            ctx.fillStyle = "white";
+            ctx.font = "20px verdana";
+            ctx.fillText(Math.floor(1 / dt), 10, 25);
+
             requestAnimationFrame(passo);
         }
 

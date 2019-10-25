@@ -83,10 +83,14 @@ Scene.prototype.removeSprites = function () {
 Scene.prototype.desenharMapa = function () {
     this.map.desenhar(this.ctx);
 }
+Scene.prototype.desenharMuro = function () {
+    this.map.desenhaMuro(this.ctx);
+}
 
 Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
+   // this.desenharMuro();
     this.comportar();
     this.mover(dt);
     this.desenhar();
