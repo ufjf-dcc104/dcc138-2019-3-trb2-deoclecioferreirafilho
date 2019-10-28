@@ -22,6 +22,10 @@ function Sprite(params = {}) {
             8: { c: 1, l: 8, n: 8 }, // andando cima
 
         },
+        posTiropc:{
+            x:0,
+            y:0
+        },
         pose: 3,
         speed: 0,
         frame: 0,
@@ -42,12 +46,12 @@ Sprite.prototype.constructor = Sprite;
 
 
 Sprite.prototype.desenhar = function (ctx) {
-
     ctx.save();
-    ctx.translate(this.x, this.y);
     ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+    ctx.translate(this.x, this.y);
     ctx.rotate(this.a + Math.PI / 2);
-
+    /*
+*/
     ctx.fillStyle = this.color;
     ctx.strokeStyle = "black";
     ctx.lineWidth = 1;
@@ -64,18 +68,32 @@ Sprite.prototype.mover = function (dt) {
 }
 
 Sprite.prototype.moverOrtogonal = function (dt) {
-
+    
+    this.a = this.a + this.va * dt;
     /*
+    this.vx = this.vm * Math.cos(this.a);
+    this.vy = this.vm * Math.sin(this.a);
+    */
+    this.x = this.x + this.vx * dt;
+    this.y = this.y + this.vy * dt;
+
+    this.cooldown = this.cooldown - dt;
+
+
+
+
+
+    /*          
     this.a = this.a + this.va*dt;
     this.vx = this.vx + this.ax * dt- this.vx * 0.9 * dt;
     this.vy = this.vy + this.ay * dt + 120 * dt;
- */
-
+    
     this.mc = Math.floor(this.x / this.scene.map.SIZE);
     this.ml = Math.floor(this.y / this.scene.map.SIZE);
-
+    
     this.aplicaRestricoes(dt);
     this.cooldown = this.cooldown - dt;
+  */
 }
 Sprite.prototype.aplicaRestricoes = function (dt) {
 

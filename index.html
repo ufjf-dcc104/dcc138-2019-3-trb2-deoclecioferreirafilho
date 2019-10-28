@@ -23,10 +23,13 @@
         assetsMng.loadImage("blocos", "assets/blocos.png");
         assetsMng.loadImage("grama", "assets/grass.jpg");
         assetsMng.loadImage("grunch", "assets/grunch.png");
+        assetsMng.loadImage("grunchArrow", "assets/grunch_f.png");
         assetsMng.loadImage("ladygreen", "assets/ladygreen.png");
         assetsMng.loadImage("osos", "assets/osos.png");
+        assetsMng.loadImage("arrow64", "assets/arrow64.png");
+        
         // assetsMng.loadAudio("shot", "assets/shot.mp3");
-
+        var imagensPC = "grunch";
         var canvas = document.querySelector("canvas");
         canvas.width = 640;
         canvas.height = 640;
@@ -39,7 +42,7 @@
             espaco: 0
         }
         var mapa = new Map({
-            COLUMNS: 20, LINES: 20, m:
+            m:
                 [
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -70,53 +73,79 @@
 
 
 
-        var pc = new Sprite({ x: 60, y: 60, w: 30, h: 5, speed: 2, pose: 10 * 64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC }); //
+        var pc = new Sprite({ x: 60, y: 60, w: 28, h: 5, speed: 2, pose: 10 * 64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC });
         cena1.adicionar(pc);
+
+        var direcaoPC = 2;
+        var sizePC = 64;
 
         // cena1.desenharMuro();
 
         function desenhaPC(ctx) {
             ctx.save();
             ctx.translate(this.x, this.y);
-            ctx.strokeStyle = "white";
-            // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
-            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
 
+            // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            ctx.strokeStyle = "grey";
+            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
             ctx.drawImage(
-                this.scene.assets.img("grunch"),
+                this.scene.assets.img(imagensPC),
                 // (this.poses[this.pose].c + Math.floor(this.frame)) * 64,this.poses[this.pose].l * 64,
                 //Math.floor(this.frame) * 64,
                 this.frame,
                 this.pose,
-                64,
-                64,
-                -64 / 2,
-                1 - 64,
-                64,
-                64
+                sizePC,
+                sizePC,
+                -sizePC / 2,
+                1 - sizePC,
+                sizePC,
+                sizePC
             );
-
 
             ctx.restore();
         }
-
+        /*
+                function blocoRet(objA, objB) {
+                    var distX = (objA.x + objA.w / 2) - (objB.x + objB.width / 2);
+                    var distY = (objA.y + objA.h / 2) - (objB.y + objB.height / 2);
+        
+                    var sumWidth = (objA.w + objB.width) / 2;
+                    var sumHeight = (objA.h + objB.height) / 2;
+        
+                    if (Math.abs(distX) < sumWidth && Math.abs(distY) < sumHeight) {
+                        var overlapX = sumWidth - Math.abs(distX);
+                        var overlapY = sumHeight - Math.abs(distY);
+        
+                        if (overlapX > overlapY) {
+                            objA.y = distY > 0 ? objA.y + overlapY : objA.y - overlapY;
+                        } else {
+                            objA.x = distX > 0 ? objA.x + overlapX : objA.x - overlapX;
+                        }
+                    }
+                }
+                */
         function blocoRet(pcA, muroB) {
-            var distX = (pcA.x + (pcA.w/2)) - (muroB.x + (muroB.width / 2));
-            var distY = (pcA.y + (pcA.h/2)) - (muroB.y + (muroB.height / 2));
+            var distX = (pcA.x + pcA.w / 2) - (muroB.x + (muroB.width / 2));
+            var distY = (pcA.y + pcA.h / 2) - (muroB.y + (muroB.height / 2));
             var somaWidth = (pcA.w + muroB.width) / 2;
             var somaHeight = (pcA.h + muroB.height) / 2;
-           // console.log(distX  , distY);
-          //  console.log(somaWidth, somaHeight);
-           
-           if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight) {
-               var overlapX = somaWidth - Math.abs(distX);
-               var overlapY = somaHeight - Math.abs(distY);
-              //  console.log(overlapX, overlapY);
-               
+
+            if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight) {
+                var overlapX = somaWidth - Math.abs(distX);
+                var overlapY = somaHeight - Math.abs(distY);
+
+
+                // console.log("somaW: ", somaWidth, "somaH", somaHeight);
+                // console.log("distY: ", distY, "distX: ", distX);
+                // console.log("overX: ", overlapX, "overY: ", overlapY);
                 if (overlapX > overlapY) {
+                    //  console.log("antes pcA.y: ", pcA.y);
                     pcA.y = distY > 0 ? pcA.y + overlapY : pcA.y - overlapY;
+                    //  console.log("pcA.y: ", pcA.y);
                 } else {
+                    // console.log("antes pcA.x: ", pcA.x);
                     pcA.x = distX > 0 ? pcA.x + overlapX : pcA.x - overlapX;
+                    // console.log("pcA.x: ", pcA.x);
                 }
             }
         }
@@ -126,7 +155,7 @@
             for (var c = 0; c < mapa.COLUMNS; c++) {
                 for (var l = 0; l < mapa.LINES; l++) {
 
-                    if (mapa.m[c][l] === 1) {
+                    if (mapa.m[l][c] === 1) {
                         var muro = {
                             x: c * mapa.SIZE,
                             y: l * mapa.SIZE,
@@ -134,11 +163,8 @@
                             height: mapa.SIZE
                         };
                         muros.push(muro);
-                       // console.log(muro);
-                       // console.log(muro.x, muro.y);
                     }
                 }
-               //console.log(muros[c]);
             }
         }
 
@@ -146,62 +172,146 @@
 
         function porTeclasDirecionais(teclas) {
             return function () {
+               // imagensPC = "grunch";
+
                 if (teclas.esquerda && !teclas.direita) {
                     this.x -= this.speed;
-                    this.pose = (8 * 64) + (64 * 1)
+                    this.pose = (8 * sizePC) + (sizePC * 1)
+                    direcaoPC = 1;
                 }
                 if (teclas.direita && !teclas.esquerda) {
                     this.x += this.speed;
-                    this.pose = (8 * 64) + (64 * 3)
-
+                    this.pose = (8 * sizePC) + (sizePC * 3)
+                    direcaoPC = 3;
                 }
 
                 if (teclas.cima && !teclas.baixo) {
                     this.y -= this.speed;
-                    this.pose = (8 * 64) + (64 * 0)
-
+                    this.pose = (8 * sizePC) + (sizePC * 0)
+                    direcaoPC = 0;
                 }
                 if (teclas.baixo && !teclas.cima) {
                     this.y += this.speed;
-                    this.pose = (8 * 64) + (64 * 2)
-
+                    this.pose = (8 * sizePC) + (sizePC * 2)
+                    direcaoPC = 2;
                 }
                 if (teclas.esquerda || teclas.direita || teclas.cima || teclas.baixo) {
                     this.countAnim++;
                     if (this.countAnim >= 40) { this.countAnim = 0 };
-                    this.frame = Math.floor(this.countAnim / 5) * 64;
+                    this.frame = Math.floor(this.countAnim / 5) * sizePC;
 
 
-                    for (var i = 0;i < muros.length; i++) {
+                    for (var i = 0; i < muros.length; i++) {
                         var muro = muros[i];
                         blocoRet(this, muro);
-                        console.log(muros[i]);
-                        // console.log(mapa.muros[1])
-                        //console.log(muro.x);
                     }
-
                 } else {
                     this.frame = 0;
                     this.countAnim = 0;
                 }
 
 
-                /*
-                            if (teclas.espaco && this.cooldown <= 0) {
-                                var tiro = new Sprite({
-                                    x: this.x, y: this.y,
-                                    a: this.a - 0.1 + 0.2 * Math.random(),
-                                    vm: 240, color: "green", w: 4, h: 4,
-                                    props: { tipo: "tiro" }
-                                });
-                                this.scene.adicionar(tiro);
-                                this.cooldown = 0.1;
-                                assetsMng.play("shot");
-                            }
-                */
+                if (teclas.espaco && this.cooldown <= 0) {
+                    var tiro = new Sprite({
+                        x: this.x,
+                        y: this.y - 29,
+                        // a: this.a - 0.1 + 0.2 * Math.random(),
+                        // vm: 240,
+                        color: "green",
+                        w: 4,
+                        h: 4,
+                        speed: 10,
+                        props: { tipo: "tiro" },
+                        //vx: +50,
+                        //vx: 0,
+                        rotate: (this.a + Math.PI),
+                        comportar: vtiro,
+                        desenhar: desenhaArrow
+                    });
+                    this.scene.adicionar(tiro);
+                    
+
+                    if (direcaoPC === 1) {
+                        this.x -= this.speed;
+
+                    }
+                    if (direcaoPC === 3) {
+                        this.x += this.speed;
+
+                    }
+                    if (direcaoPC === 0) {
+                        this.y -= this.speed;
+
+                    }
+                    if (direcaoPC === 2) {
+                        this.y += this.speed;
+
+                    }
+                    this.cooldown = 0.5;
+                    // assetsMng.play("shot");
+
+                    imagensPC = "grunchArrow";
+
+                }
+
             }
         }
 
+        
+
+        function animaPCArrow(){
+            pc.countAnim++;
+            if (this.countAnim >= 3) { pc.countAnim = 0 };
+            pc.frame = Math.floor(pc.countAnim / 5) * sizePC;
+        }
+
+        function vtiro() {
+
+            if (direcaoPC === 1) { // esquerda
+                this.x -= this.speed;
+                this.posTiropc.x = -sizePC/2;
+                this.posTiropc.y = -sizePC/2;
+                pc.pose = (16 * sizePC) + (sizePC * 1);
+                animaPCArrow();
+                
+            }
+            if (direcaoPC === 3) { // direita
+                this.x += this.speed;
+                this.posTiropc.x = -sizePC / 2;
+                this.posTiropc.y = -sizePC / 2;
+
+            }
+            if (direcaoPC === 0) {
+                this.y -= this.speed;
+                this.posTiropc.x = -sizePC / 2;
+                this.posTiropc.y = -sizePC / 2;
+
+            }
+            if (direcaoPC === 2) {
+                this.y += this.speed;
+                this.posTiropc.x = -sizePC / 2;
+                this.posTiropc.y = -sizePC / 2;
+
+            }
+
+
+        }
+
+        function desenhaArrow(ctx) {
+            ctx.save();
+            ctx.drawImage(
+                this.scene.assets.img("arrow64"),
+                direcaoPC * sizePC,
+                this.pose,
+                sizePC,
+                sizePC,
+                this.x + this.posTiropc.x,
+                this.y + this.posTiropc.y,
+                sizePC,
+                sizePC
+            );
+            ctx.restore();
+        }
 
 
         addEventListener("keydown", function (e) {
@@ -248,8 +358,9 @@
             dt = (t - anterior) / 1000;
             if (assetsMng.progresso() === 100) {
                 cena1.passo(dt);
-
             }
+
+
             anterior = t;
             ctx.fillStyle = "white";
             ctx.font = "20px verdana";

@@ -94,6 +94,6 @@ Scene.prototype.passo = function (dt) {
     this.comportar();
     this.mover(dt);
     this.desenhar();
-    //this.checaColisao();
+    this.checaColisao();
     this.removeSprites();
 }
