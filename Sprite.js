@@ -61,6 +61,8 @@ Sprite.prototype.desenhar = function (ctx) {
 };
 
 
+
+
 Sprite.prototype.mover = function (dt) {
     this.moverOrtogonal(dt)
     //if (this.frame > this.poses[this.pose].n) { this.frame = 0 }
