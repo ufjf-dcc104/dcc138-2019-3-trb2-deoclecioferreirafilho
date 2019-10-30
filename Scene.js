@@ -49,6 +49,13 @@ Scene.prototype.checaColisao = function () {
         if (this.sprites[i].morto) {
             this.toRemove.push(this.sprites[i]);
         }
+        
+        if (this.sprites[i].props.tipo === "tiro"
+            && (this.sprites[i].x > 640 || this.sprites[i].y > 640 ||
+                this.sprites[i].x < 0 || this.sprites[i].y < 0)) {
+                this.toRemove.push(this.sprites[i]);
+            }    
+        
         for (var j = i + 1; j < this.sprites.length; j++) {
             if (this.sprites[i].colidiuCom(this.sprites[j])) {
                 if (this.sprites[i].props.tipo === "pc"
@@ -64,11 +71,13 @@ Scene.prototype.checaColisao = function () {
                         this.toRemove.push(this.sprites[j]);
                         this.adicionar(new Explosion({ x: this.sprites[i].x, y: this.sprites[i].y }));
                         this.assets.play("explosion");
-                    }
+                    } 
             }
         }
     }
 };
+
+    
 
 Scene.prototype.removeSprites = function () {
     for (var i = 0; i < this.toRemove.length; i++) {

@@ -27,9 +27,9 @@
         assetsMng.loadImage("ladygreen", "assets/ladygreen.png");
         assetsMng.loadImage("osos", "assets/osos.png");
         assetsMng.loadImage("arrow64", "assets/arrow64.png");
-        
+
         // assetsMng.loadAudio("shot", "assets/shot.mp3");
-        var imagensPC = "grunch";
+        var imagensPC = "grunchArrow";
         var canvas = document.querySelector("canvas");
         canvas.width = 640;
         canvas.height = 640;
@@ -172,7 +172,6 @@
 
         function porTeclasDirecionais(teclas) {
             return function () {
-               // imagensPC = "grunch";
 
                 if (teclas.esquerda && !teclas.direita) {
                     this.x -= this.speed;
@@ -200,7 +199,6 @@
                     if (this.countAnim >= 40) { this.countAnim = 0 };
                     this.frame = Math.floor(this.countAnim / 5) * sizePC;
 
-
                     for (var i = 0; i < muros.length; i++) {
                         var muro = muros[i];
                         blocoRet(this, muro);
@@ -211,70 +209,110 @@
                 }
 
 
+
                 if (teclas.espaco && this.cooldown <= 0) {
+
+                    this.pose = (16 * sizePC) + (sizePC * 1);
+
+                    while (this.frame < 12) { 
+                        //console.log(this.frame);
+                        this.frame += 2 * dt;
+                    }
+                    this.frame = 0 
+                   // moverTiro()
+                    /*
+                    while (this.countAnim <= 12) {
+                        this.frame = Math.floor(this.countAnim / 1) * sizePC;
+                        this.countAnim++;
+
+                    }
+*/
                     var tiro = new Sprite({
                         x: this.x,
                         y: this.y - 29,
-                        // a: this.a - 0.1 + 0.2 * Math.random(),
-                        // vm: 240,
                         color: "green",
                         w: 4,
                         h: 4,
                         speed: 10,
                         props: { tipo: "tiro" },
-                        //vx: +50,
-                        //vx: 0,
                         rotate: (this.a + Math.PI),
                         comportar: vtiro,
                         desenhar: desenhaArrow
                     });
                     this.scene.adicionar(tiro);
-                    
 
-                    if (direcaoPC === 1) {
-                        this.x -= this.speed;
-
-                    }
-                    if (direcaoPC === 3) {
-                        this.x += this.speed;
-
-                    }
-                    if (direcaoPC === 0) {
-                        this.y -= this.speed;
-
-                    }
-                    if (direcaoPC === 2) {
-                        this.y += this.speed;
-
-                    }
                     this.cooldown = 0.5;
                     // assetsMng.play("shot");
+                    /*
 
-                    imagensPC = "grunchArrow";
+                    this.pose = (16 * sizePC) + (sizePC * 1);
+                    this.countAnim++;
+                    if (this.countAnim >= 40) { this.countAnim = 0 };
+                    this.frame = Math.floor(this.countAnim / 5) * sizePC;
+                    console.log(this.countAnim);
+
+                    */
+                    /*
+                     
+                    var i = 0;
+                    while (i<=12){
+                        this.frame = Math.floor(i/10000) * sizePC;
+                        i++;
+                     }
+                     i = 0
+                     this.frame = 0
+                     */
+
+                    //if (this.countAnim >= 40) { this.countAnim = 0 };
+
+
+
+
+                    //pc.frame += 60 * 2;
+                    // pc.frame += 2 * dt;
+                    // if (pc.frame > 11) { pc.frame = 0 }
+
 
                 }
 
             }
         }
 
-        
-
-        function animaPCArrow(){
-            pc.countAnim++;
-            if (this.countAnim >= 3) { pc.countAnim = 0 };
-            pc.frame = Math.floor(pc.countAnim / 5) * sizePC;
+        function moverTiro(dt) {
+            this.frame += 6 * dt;
+            if (this.frame > 12) { this.frame = 0 }
+            console.log(dt);
         }
-
-        function vtiro() {
+        /*
+                function animaPCArrow(){
+                    pc.countAnim++;
+                    if (this.countAnim >= 130) { pc.countAnim = 0 };
+                    pc.frame = Math.floor(pc.countAnim ) * sizePC;
+                }
+        */
+        function vtiro(dt) {
 
             if (direcaoPC === 1) { // esquerda
                 this.x -= this.speed;
-                this.posTiropc.x = -sizePC/2;
-                this.posTiropc.y = -sizePC/2;
-                pc.pose = (16 * sizePC) + (sizePC * 1);
-                animaPCArrow();
-                
+                this.posTiropc.x = -sizePC / 2;
+                this.posTiropc.y = -sizePC / 2;
+
+
+
+
+                // pc.countAnim = 0
+
+
+                // pc.countAnim++;
+                //if (pc.countAnim >= 130) { pc.countAnim = 0 };
+            } else {
+                //  pc.frame = 0;
+                // pc.countAnim = 0;
+                // pc.desenhar = desenhaPC;
             }
+
+
+
             if (direcaoPC === 3) { // direita
                 this.x += this.speed;
                 this.posTiropc.x = -sizePC / 2;
