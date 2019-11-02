@@ -296,6 +296,361 @@ Map.prototype.desenhar = function (ctx) {
                     );
 
                     break;
+                case 17:
+                    x = 10;
+                    y = 1;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 18:
+                    x = 9;
+                    y = 2;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 19:
+                    x = 10;
+                    y = 2;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 20:
+                    x = 0;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 21:
+                    x = 1;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 22:
+                    x = 2;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 23:
+                    x = 3;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 24:
+                    x = 4;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 25:
+                    x = 5;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 26:
+                    x = 6;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 27:
+                    x = 7;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 28:
+                    x = 8;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 29:
+                    x = 9;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 30:
+                    x = 10;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 31:
+                    x = 11;
+                    y = 1;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 32:
+                    x = 12;
+                    y = 1;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 33:
+                    x = 13;
+                    y = 1;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 32:
+                    x = 14;
+                    y = 1;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 33:
+                    x = 14;
+                    y = 0;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+
+                    break;
+                case 34:
+                    x = 12;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
+                case 35:
+                    x = 14;
+                    y = 2;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
+                case 36:
+                    x = 15;
+                    y = 2;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
+                case 37:
+                    x = 14;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
+                case 38:
+                    x = 15;
+                    y = 3;
+                    ctx.drawImage(this.scene.assets.img("tiles"),
+                        x * 32,
+                        y * 32,
+                        32,
+                        32,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
                 default:
                     cor = "black";
             }

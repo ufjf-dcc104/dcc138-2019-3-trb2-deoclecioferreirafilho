@@ -99,7 +99,6 @@ Scene.prototype.desenharMuro = function () {
 Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
-   // this.desenharMuro();
     this.comportar();
     this.mover(dt);
     this.desenhar();
