@@ -55,11 +55,12 @@ Scene.prototype.atualizar = function () {
             }
         }
 }
-/*
-Scene.prototype.atualizaPlacar = function () {
-    mensagePlacar.text = "FRUTAS: "  + "   -   PERC DE TIROS: "  + " %"
+
+Scene.prototype.tocarMusica = function () {
+    this.assets.play("florest");
+    
 }
-/*/
+
 Scene.prototype.adicionarMens = function () {
     this.mensagem.push(mensagem);
     this.mensagem = this;
@@ -125,7 +126,7 @@ Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
     this.atualizar();
-   // this.atualizaPlacar();
+    this.tocarMusica();
     this.comportar();
     this.mover(dt);
     this.desenhar();

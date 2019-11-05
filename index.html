@@ -30,6 +30,7 @@
         assetsMng.loadImage("osos", "assets/osos.png");
         assetsMng.loadImage("arrow64", "assets/arrow64.png");
         assetsMng.loadAudio("explosion", "assets/explosion.mp3");
+        assetsMng.loadAudio("florest", "assets/florest.mp3");
         assetsMng.loadImage("explosion", "assets/explosion.png");
         assetsMng.loadImage("fruits", "assets/fruits32.png");
         assetsMng.loadAudio("shot", "assets/shoot.ogg");
@@ -92,6 +93,7 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
+        cena1.tocarMusica("florest");
 
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
@@ -120,29 +122,18 @@
             }
             if (valor < 100) {
                 return "0" + valor.toString();
-            }
+            }s
             return valor.toString();
         }
 
-        for (var k = 0; k < 4; k++) {
-            cena1.adicionar(new Sprite({
-                x: 300 * Math.random(),
-                y: 400 * Math.random(),
-                w: 32,
-                h: 32, 
-                speed: 2, 
-                pose: 10 * 64, 
-                frame: 0,
-               // va: 2 * Math.random(),
-               // vm: 40 * Math.random(),
-                color: "red",
-                comportar: persegue3(pc),
-                props: { tipo: "npc" },
-                desenhar: desenhaNPC
-            }));
-        }
+        //for (var k = 0; k < 1; k++) {
+        var inimigo = new Sprite({
+            x: 224 , y: 410, w: 32, h: 32, speed: 2, pose: 10 * 64, frame: 0, color: "red", comportar: persegue3(pc), props: { tipo: "npc" }, desenhar: desenhaNPC
+        });
+        cena1.adicionar(inimigo);
 
 
+ 
 
         function desenhaPC(ctx) {
             ctx.save();
@@ -171,7 +162,7 @@
         function desenhaNPC() {
             ctx.save();
             ctx.translate(this.x, this.y);
-           // ctx.rotate(this.a + Math.PI / 2);
+            // ctx.rotate(this.a + Math.PI / 2);
             ctx.drawImage(
                 this.scene.assets.img("osos"),
                 this.frame,
@@ -206,45 +197,46 @@
             return function () {
 
                 if (Math.floor(this.x - 32) % 64 === 0 && Math.floor(this.y - 32) % 64 === 0) {
-                    var NPCcol = Math.floor(this.x / 50);
-                    var NPClin = Math.floor(this.y / 50);
+                    var NPCcol = Math.floor(this.x / 64);
+                    var NPClin = Math.floor(this.y / 64);
+                    console.log(NPCcol, NPClin);
                     var valida = [];
 
-                    if (this.mapa[NPClin][NPCcol - 1] !== 1 && this.direcaoNPC !== 3) { valida.push(1); } // esquerda
-                    if (this.mapa[NPClin][NPCcol + 1] !== 1 && this.direcaoNPC !== 3) { valida.push(1); } // esquerda
-                    if (this.mapa[NPClin - 1][NPCcol] !== 1 && this.direcaoNPC !== 2) { valida.push(0); } // cima
-                    if (this.mapa[NPClin + 1][NPCcol] !== 1 && this.direcaoNPC !== 0) { valida.push(2); } // baixo
+                    if (this.mapa[NPClin][NPCcol - 1] === 0 && this.direcaoNPC !== 3) { valida.push(1); } // esquerda
+                    if (this.mapa[NPClin][NPCcol + 1] === 0 && this.direcaoNPC !== 1) { valida.push(3); } // esquerda
+                    if (this.mapa[NPClin - 1][NPCcol] === 0 && this.direcaoNPC !== 2) { valida.push(0); } // cima
+                    if (this.mapa[NPClin + 1][NPCcol] === 0 && this.direcaoNPC !== 0) { valida.push(2); } // baixo
 
-                    this.direcaoNPC = valida[Math.floor(Math.random()* valida.length)];
+                    this.direcaoNPC = valida[Math.floor(Math.random() * valida.length)];
                 }
-                    //console.log(this.direcaoNPC);
-                switch (this.direcaoNPC){
+                //console.log(this.direcaoNPC);
+
+                switch (this.direcaoNPC) {
 
                     case 3:
-                        this.x -= 1;
+                        this.x -= this.speed;
                         this.pose = (8 * sizePC) + (sizePC * 1)
                         break;
                     case 1:
-                        this.x += 1;
+                        this.x += this.speed;
                         this.pose = (8 * sizePC) + (sizePC * 3)
                         break;
                     case 0:
-                        this.y -= 1;
+                        this.y -= this.speed;
                         this.pose = (8 * sizePC) + (sizePC * 0)
                         break;
                     case 2:
-                        this.y += 1;
+                        this.y += this.speed;
                         this.pose = (8 * sizePC) + (sizePC * 2)
                         break;
 
                 }
 
-/*
-                var dx = alvo.x - this.x;
+                /*var dx = alvo.x - this.x;
                 var dy = alvo.y - this.y;
                 var da = Math.sqrt(dx * dx + dy * dy);
-                var adj = Math.PI / 2;
-                var prod = (dx / da) * Math.cos(this.a + adj) + (dy / da) * Math.sin(this.a + adj);
+               // var adj = Math.PI / 2;
+                var prod = (dx / da) *(dy / da) ;
                 this.va = 2 * (prod - 0);
                 //this.vm = 30;*/
             }
@@ -294,9 +286,9 @@
             ctx.save();
             ctx.translate(this.x, this.y);
 
-            ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
-            ctx.strokeStyle = "yellow";
-            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            // ctx.strokeStyle = "yellow";
+            //  ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
             ctx.drawImage(
                 this.scene.assets.img("fruits"),
                 0,
@@ -438,6 +430,7 @@
                     if (F >= x) { F = 0; };
                     console.log("frame:", this.frame);
 
+                    // cria as flechas
                     var tiro = new Sprite({
                         x: this.x,
                         y: this.y - 29,
