@@ -40,6 +40,31 @@ Scene.prototype.comportar = function () {
 };
 
 
+Scene.prototype.atualizar = function () {
+    if (mensages.length !== 0)
+        for (var i = 0; i < mensages.length; i++) {
+            var mensagens = mensages[i];
+            if (mensagens.visible) {
+                this.ctx.font = mensagens.font;
+                this.ctx.fillStyle = mensagens.color;
+                this.ctx.texBaseline = mensagens.baseline;
+               // mensagens.x = (this.w - ctx.measureText(mensagens.text).width) / 2;
+                
+                this.ctx.fillText(mensagens.text, mensagens.x, mensagens.y);
+
+            }
+        }
+}
+/*
+Scene.prototype.atualizaPlacar = function () {
+    mensagePlacar.text = "FRUTAS: "  + "   -   PERC DE TIROS: "  + " %"
+}
+/*/
+Scene.prototype.adicionarMens = function () {
+    this.mensagem.push(mensagem);
+    this.mensagem = this;
+}
+
 Scene.prototype.limpar = function () {
     this.ctx.clearRect(0, 0, this.w, this.h);
 }
@@ -99,6 +124,8 @@ Scene.prototype.desenharMuro = function () {
 Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
+    this.atualizar();
+   // this.atualizaPlacar();
     this.comportar();
     this.mover(dt);
     this.desenhar();

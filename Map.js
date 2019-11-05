@@ -651,6 +651,7 @@ Map.prototype.desenhar = function (ctx) {
                         this.SIZE
                     );
                     break;
+                
                 default:
                     cor = "black";
             }

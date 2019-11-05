@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>### Grunch ###</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
     <script src="Sprite.js"></script>
     <script src="Scene.js"></script>
     <script src="AssetsManager.js"></script>
@@ -15,7 +16,7 @@
 </head>
 
 <body>
-
+    <p class="hidden">F</p>
     <canvas></canvas>
     <script>
         var assetsMng = new AssetsManager();
@@ -45,6 +46,22 @@
             baixo: 0,
             espaco: 0
         }
+
+        var mensagem = function (y, text, color) {
+            this.x = 0;
+            this.y = y;
+            this.text = text;
+            this.visible = true;
+            this.font = "bold 20px emulogic";
+            this.color = color;
+            this.baseline = "top";
+        }
+
+        var mensages = [];
+        var direcaoPC = 2;
+        var sizePC = 64;
+        var frutas = 0;
+
         var mapa = new Map({
             m:
                 [
@@ -75,40 +92,57 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
 
-       
+
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
         var pc = new Sprite({ x: 250, y: 200, w: 22, h: 5, speed: 2, pose: 10 * 64, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC });
         cena1.adicionar(pc);
 
-        var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "red");
-            var mensagePausa = new mensagem(cena1.h / 2, "PAUSA", "red");
-            mensagePausa.visible = false;
-            mensages.push(mensageInicio);
-            mensages.push(mensagePausa);
-            var mensagePlacar = new mensagem(14, "", "white");
-            mensagePlacar.font = "bold 15px arial";
-            mensages.push(mensagePlacar);
+
+        var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "White");
+        var mensagePausa = new mensagem(cena1.h / 2, "PAUSA", "White");
+        mensageInicio.x = Math.floor((canvas.width - (ctx.measureText(mensageInicio.text).width)) / 2);
+
+        mensagePausa.visible = false;
+        // mensages.push(mensageInicio);
+        mensages.push(mensagePausa);
+        var mensagePlacar = new mensagem(20, "", "white");
+        mensagePlacar.font = "bold 15px emulogic";
+        mensagePlacar.text = "FRUTAS: " + exibeTexto(frutas);
+        mensagePlacar.x = 20;
+        mensages.push(mensagePlacar);
 
 
-        for (var k = 0; k < 10; k++) {
+
+        function exibeTexto(valor) {
+            if (valor < 10) {
+                return "00" + valor.toString();
+            }
+            if (valor < 100) {
+                return "0" + valor.toString();
+            }
+            return valor.toString();
+        }
+
+        for (var k = 0; k < 4; k++) {
             cena1.adicionar(new Sprite({
                 x: 300 * Math.random(),
                 y: 400 * Math.random(),
                 w: 32,
-                h: 32,
-                va: 2 * Math.random(),
-                vm: 40 * Math.random(),
+                h: 32, 
+                speed: 2, 
+                pose: 10 * 64, 
+                frame: 0,
+               // va: 2 * Math.random(),
+               // vm: 40 * Math.random(),
                 color: "red",
-                comportar: persegue2(pc),
+                comportar: persegue3(pc),
                 props: { tipo: "npc" },
                 desenhar: desenhaNPC
             }));
         }
 
 
-        var direcaoPC = 2;
-        var sizePC = 64;
 
         function desenhaPC(ctx) {
             ctx.save();
@@ -137,7 +171,7 @@
         function desenhaNPC() {
             ctx.save();
             ctx.translate(this.x, this.y);
-            ctx.rotate(this.a + Math.PI / 2);
+           // ctx.rotate(this.a + Math.PI / 2);
             ctx.drawImage(
                 this.scene.assets.img("osos"),
                 this.frame,
@@ -152,6 +186,9 @@
             ctx.restore();
         }
 
+
+
+
         function persegue2(alvo) {
             return function () {
                 var dx = alvo.x - this.x;
@@ -165,6 +202,55 @@
             }
         }
 
+        function persegue3(alvo) {
+            return function () {
+
+                if (Math.floor(this.x - 32) % 64 === 0 && Math.floor(this.y - 32) % 64 === 0) {
+                    var NPCcol = Math.floor(this.x / 50);
+                    var NPClin = Math.floor(this.y / 50);
+                    var valida = [];
+
+                    if (this.mapa[NPClin][NPCcol - 1] !== 1 && this.direcaoNPC !== 3) { valida.push(1); } // esquerda
+                    if (this.mapa[NPClin][NPCcol + 1] !== 1 && this.direcaoNPC !== 3) { valida.push(1); } // esquerda
+                    if (this.mapa[NPClin - 1][NPCcol] !== 1 && this.direcaoNPC !== 2) { valida.push(0); } // cima
+                    if (this.mapa[NPClin + 1][NPCcol] !== 1 && this.direcaoNPC !== 0) { valida.push(2); } // baixo
+
+                    this.direcaoNPC = valida[Math.floor(Math.random()* valida.length)];
+                }
+                    //console.log(this.direcaoNPC);
+                switch (this.direcaoNPC){
+
+                    case 3:
+                        this.x -= 1;
+                        this.pose = (8 * sizePC) + (sizePC * 1)
+                        break;
+                    case 1:
+                        this.x += 1;
+                        this.pose = (8 * sizePC) + (sizePC * 3)
+                        break;
+                    case 0:
+                        this.y -= 1;
+                        this.pose = (8 * sizePC) + (sizePC * 0)
+                        break;
+                    case 2:
+                        this.y += 1;
+                        this.pose = (8 * sizePC) + (sizePC * 2)
+                        break;
+
+                }
+
+/*
+                var dx = alvo.x - this.x;
+                var dy = alvo.y - this.y;
+                var da = Math.sqrt(dx * dx + dy * dy);
+                var adj = Math.PI / 2;
+                var prod = (dx / da) * Math.cos(this.a + adj) + (dy / da) * Math.sin(this.a + adj);
+                this.va = 2 * (prod - 0);
+                //this.vm = 30;*/
+            }
+        }
+
+
 
         function blocoRet(pcA, muroB) {
             var distX = (pcA.x + pcA.w / 2) - (muroB.x + (muroB.width / 2));
@@ -176,18 +262,10 @@
                 var overlapX = somaWidth - Math.abs(distX);
                 var overlapY = somaHeight - Math.abs(distY);
 
-
-                // console.log("somaW: ", somaWidth, "somaH", somaHeight);
-                // console.log("distY: ", distY, "distX: ", distX);
-                // console.log("overX: ", overlapX, "overY: ", overlapY);
                 if (overlapX > overlapY) {
-                    //  console.log("antes pcA.y: ", pcA.y);
                     pcA.y = distY > 0 ? pcA.y + overlapY : pcA.y - overlapY;
-                    //  console.log("pcA.y: ", pcA.y);
                 } else {
-                    // console.log("antes pcA.x: ", pcA.x);
                     pcA.x = distX > 0 ? pcA.x + overlapX : pcA.x - overlapX;
-                    // console.log("pcA.x: ", pcA.x);
                 }
             }
         }
@@ -216,9 +294,9 @@
             ctx.save();
             ctx.translate(this.x, this.y);
 
-            //ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
-            //ctx.strokeStyle = "yellow";
-            // ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            ctx.strokeStyle = "yellow";
+            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
             ctx.drawImage(
                 this.scene.assets.img("fruits"),
                 0,
@@ -232,55 +310,76 @@
                 sizePC / 2,
                 sizePC / 2
             );
-
             ctx.restore();
-
-
         }
 
         var posicaoFruta = [];
-
-        //  function defineFruta() {
 
         for (var c = 0; c < mapa.COLUMNS; c++) {
             for (var l = 0; l < mapa.LINES; l++) {
                 if (mapa.m[l][c] === 50) {
                     var posicao = {
                         x: c * mapa.SIZE + mapa.SIZE / 2,
-                        y: l * mapa.SIZE + mapa.SIZE / 2
+                        y: l * mapa.SIZE + mapa.SIZE / 2,
+                        width: mapa.SIZE,
+                        height: mapa.SIZE
                     };
                     this.posicaoFruta.push(posicao);
                 }
             }
         }
 
-        // }
-
-
-        //  defineFruta();
-        //novaPosicao();
 
 
         function novaPosicao() {
-
-            console.log("posicaofruta: ", posicaoFruta.length)
             var pos = posicaoFruta[Math.floor(Math.random() * posicaoFruta.length)];
             while (novaFruta.posicao === pos) {
                 pos = posicaoFruta[Math.floor(Math.random() * posicaoFruta.length)];
             }
-            // this.x = pos.x;
-            // this.y = pos.y;
-
             return pos;
-
         }
 
-        this.novaFruta = {};
-        this.novaFruta.posicao = novaPosicao();
-        console.log("pos x: ", this.novaFruta.posicao.x, "pos Y: ", this.novaFruta.posicao.y);
+        function portoque() {
 
-        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, color: "blue", pose: 10 * 64, frame: 0, /*comportar: novaPosicao(),*/  props: { tipo: "fruta" }, desenhar: desenhaFruta });
+            novaFruta = {};
+            novaFruta.posicao = novaPosicao();
+
+        }
+        portoque();
+
+
+        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, color: "blue", pose: 10 * 64, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
+
+        var frutas = 0;
+
+        function pegaFruta(pcA, muroB) {
+            var distX = (pcA.x + pcA.w / 2) - (muroB.x + (muroB.w / 2));
+            var distY = (pcA.y + pcA.h / 2) - (muroB.y + (muroB.h / 2));
+            var somaWidth = (pcA.w + muroB.w) / 2;
+            var somaHeight = (pcA.h + muroB.h) / 2;
+
+            // console.log(Math.abs(distX), somaWidth)
+
+
+            if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight) {
+
+                var overlapX = somaWidth - Math.abs(distX);
+                var overlapY = somaHeight - Math.abs(distY);
+
+                if (overlapX > overlapY || overlapX < overlapY) {
+
+                    frutas++;
+                    mensagePlacar.text = "FRUTAS: " + exibeTexto(frutas);
+
+                    novaFruta.posicao = novaPosicao();
+                    fruta.x = novaFruta.posicao.x
+                    fruta.y = novaFruta.posicao.y
+                }
+
+            }
+        }
+
 
 
         function porTeclasDirecionais(teclas) {
@@ -316,6 +415,11 @@
                         var muro = muros[i];
                         blocoRet(this, muro);
                     }
+
+                    var Frut = fruta;
+                    pegaFruta(this, Frut);
+
+
                 } else {
                     this.frame = 0;
                     this.countAnim = 0;
@@ -375,7 +479,7 @@
 
         function vtiro() {
 
-           // animaPCArrow(dt);
+            // animaPCArrow(dt);
             if (direcaoPC === 1) { // esquerda
 
                 pc.pose = (16 * sizePC) + (sizePC * 1);
@@ -472,12 +576,10 @@
             if (assetsMng.progresso() === 100) {
                 cena1.passo(dt);
             }
-
-
             anterior = t;
             ctx.fillStyle = "white";
             ctx.font = "20px verdana";
-            ctx.fillText(Math.floor(1 / dt), 10, 25);
+            ctx.fillText(Math.floor(1 / dt), 10, 100);
 
             requestAnimationFrame(passo);
 
