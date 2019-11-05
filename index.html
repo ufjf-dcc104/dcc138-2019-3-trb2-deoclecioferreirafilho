@@ -122,26 +122,26 @@
             }
             if (valor < 100) {
                 return "0" + valor.toString();
-            }s
+            } s
             return valor.toString();
         }
 
         //for (var k = 0; k < 1; k++) {
         var inimigo = new Sprite({
-            x: 224 , y: 410, w: 32, h: 32, speed: 2, pose: 10 * 64, frame: 0, color: "red", comportar: persegue3(pc), props: { tipo: "npc" }, desenhar: desenhaNPC
+            x: 224, y: 410, w: 32, h: 32, speed: 2, vm: 20, pose: 10 * 64, frame: 0, color: "red", comportar: persegue3(pc), props: { tipo: "npc" }, desenhar: desenhaNPC
         });
         cena1.adicionar(inimigo);
 
 
- 
+
 
         function desenhaPC(ctx) {
             ctx.save();
             ctx.translate(this.x, this.y);
 
             // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
-            ctx.strokeStyle = "yellow";
-            ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            // ctx.strokeStyle = "yellow";
+            // ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
             ctx.drawImage(
                 this.scene.assets.img(imagensPC),
                 // (this.poses[this.pose].c + Math.floor(this.frame)) * 64,this.poses[this.pose].l * 64,
@@ -177,7 +177,17 @@
             ctx.restore();
         }
 
+        function persegue(alvo) {
+            return function () {
+                this.vx = this.vm * Math.sign(alvo.x - this.x);
+                this.vy = this.vm * Math.sign(alvo.y - this.y);
 
+                if (this.y < alvo.y + alvo.h / 2) { this.direcao = 0 }
+                else {
+                    if (this.y > alvo.y - alvo.h / 2) { this.direcao = 3 }
+                }
+            }
+        }
 
 
         function persegue2(alvo) {
@@ -196,9 +206,9 @@
         function persegue3(alvo) {
             return function () {
 
-                if (Math.floor(this.x - 32) % 64 === 0 && Math.floor(this.y - 32) % 64 === 0) {
-                    var NPCcol = Math.floor(this.x / 64);
-                    var NPClin = Math.floor(this.y / 64);
+                if (Math.floor(this.x - mapa.SIZE / 2) % mapa.SIZE === 0 && Math.floor(this.y - mapa.SIZE / 2) % mapa.SIZE / 2 === 0) {
+                    var NPCcol = Math.floor(this.x / mapa.SIZE);
+                    var NPClin = Math.floor(this.y / mapa.SIZE);
                     console.log(NPCcol, NPClin);
                     var valida = [];
 
@@ -423,8 +433,9 @@
 
                     var F = Math.floor(dt * 8 * 10) * 96;
                     var x = 36
-                    this.frame = Math.floor(x / 12) * sizePC;
-                    this.frame += 20 * dt;
+                    //this.frame = Math.floor(x / 12) * sizePC;
+                    this.frame = (this.frame < 12) ? this.frame + 1 * dt : 0;
+
                     //console.log("F: ", F, this.frame);
                     //console.log(dt, sizePC);
                     if (F >= x) { F = 0; };
