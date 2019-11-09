@@ -7,24 +7,15 @@ function Sprite(params = {}) {
         ax: 0,
         ay: 0,
         h: 10,
+        k: 0,
+        f: 1,
         w: 10,
         a: 0,
         va: 0,
         vm: 0,
-        poses: {
-            1: { c: 0, l: 10, n: 1 }, // parado frente
-            2: { c: 1, l: 10, n: 8 }, // andando baixo
-            3: { c: 0, l: 9, n: 1 }, // parado esquerda
-            4: { c: 1, l: 9, n: 8 }, // andando esquerda 
-            5: { c: 0, l: 11, n: 1 }, // parado direita
-            6: { c: 1, l: 11, n: 8 }, // andando direita 
-            7: { c: 0, l: 8, n: 1 }, // parado costa
-            8: { c: 1, l: 8, n: 8 }, // andando cima
-
-        },
-        posTiropc:{
-            x:0,
-            y:0
+        posTiropc: {
+            x: 0,
+            y: 0
         },
         pose: 3,
         speed: 0,
@@ -65,23 +56,28 @@ Sprite.prototype.desenhar = function (ctx) {
 
 Sprite.prototype.mover = function (dt) {
     this.moverOrtogonal(dt)
-    //if (this.frame > this.poses[this.pose].n) { this.frame = 0 }
-    //this.frame += 6 * dt;
-    //if (this.frame > 9) { this.frame = 0 }
+
+    this.countAnim++;
+    if (this.countAnim >= this.k) { this.countAnim = 0 };
+    this.frame = Math.floor(this.countAnim / this.f) * 64;
+
 }
 
 Sprite.prototype.moverOrtogonal = function (dt) {
-    
-    this.a = this.a + this.va * dt;
-    
-    this.vx = this.vm * Math.cos(this.a);
-    this.vy = this.vm * Math.sin(this.a);
-    
-   // this.x = this.x + this.vx * dt;
-   // this.y = this.y + this.vy * dt;
+
+    //this.x += this.speed;
+
+
+    //this.a = this.a + this.va * dt;
+
+    //  this.vx = this.vm * Math.cos(this.a);
+    //  this.vy = this.vm * Math.sin(this.a);
+
+    // this.x = this.x + this.vx * dt;
+    // this.y = this.y + this.vy * dt;
 
     this.cooldown = this.cooldown - dt;
-    
+
 
 
     /*          

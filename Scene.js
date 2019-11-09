@@ -57,7 +57,7 @@ Scene.prototype.atualizar = function () {
 }
 
 Scene.prototype.tocarMusica = function () {
-    this.assets.play("florest");
+   // this.assets.play("florest");
     
 }
 
