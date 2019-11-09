@@ -133,14 +133,22 @@
             return valor.toString();
         }
 
-        //for (var k = 0; k < 1; k++) {
+        // for (var k = 0; k < 10; k++) {
         var inimigo = new Sprite({
-            x: 272, y: 560, w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 11, frame: 0, color: "red",
-            comportar: persegue3(pc), props: { tipo: "npc" }, desenhar: desenhaNPC
+            x: 272,
+            y: 560,
+            w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
+            comportar: persegueSpawn(pc), props: { tipo: "npc", spawn: 0 }, desenhar: desenhaNPC
         });
         cena1.adicionar(inimigo);
 
-
+        var inimigo2 = new Sprite({
+            x: 592,
+            y: 528,
+            w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
+            comportar: persegueSpawn(pc), props: { tipo: "npc", spawn: 0 }, desenhar: desenhaNPC2
+        });
+        cena1.adicionar(inimigo2);
 
         function desenhaPC(ctx) {
             ctx.save();
@@ -184,6 +192,23 @@
             );
             ctx.restore();
         }
+        function desenhaNPC2() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            // ctx.rotate(this.a + Math.PI / 2);
+            ctx.drawImage(
+                this.scene.assets.img("ladygreen"),
+                this.frame,
+                this.pose * 64,
+                sizePC,
+                sizePC,
+                -sizePC + 40,
+                -sizePC + 15,
+                sizePC - 15,
+                sizePC - 15
+            );
+            ctx.restore();
+        }
 
         function persegue(alvo) {
             return function () {
@@ -213,52 +238,114 @@
 
         function persegue3(alvo) {
             return function () {
-                //  console.log(this.x, this.y )
+
                 if (Math.floor(this.x - mapa.SIZE / 2) % mapa.SIZE === 0 && Math.floor(this.y - mapa.SIZE / 2) % mapa.SIZE / 2 === 0) {
                     var NPCcol = Math.floor(this.x / mapa.SIZE);
                     var NPClin = Math.floor(this.y / mapa.SIZE);
-                    //  console.log(mapa.m[NPClin][NPCcol-1]);
                     var valida = [];
-                    
-                    if (mapa.m[NPClin][NPCcol - 1] === 0 && this.direcaoNPC != 1) { valida.push(3);} // esquerda
+                    if (mapa.m[NPClin][NPCcol - 1] === 0 && this.direcaoNPC != 1) { valida.push(3); } // esquerda
                     if (mapa.m[NPClin][NPCcol + 1] === 0 && this.direcaoNPC != 3) { valida.push(1); } // direita
                     if (mapa.m[NPClin - 1][NPCcol] === 0 && this.direcaoNPC != 2) { valida.push(0); } // cima
                     if (mapa.m[NPClin + 1][NPCcol] === 0 && this.direcaoNPC != 0) { valida.push(2); } // baixo
-                    
+
+                    this.direcaoNPC = valida[Math.floor(Math.random() * valida.length)];
+                }
+
+                //console.log(this.direcaoNPC);
+
+                switch (this.direcaoNPC) {
+
+                    case 3:
+                       // if (alvo.x < this.x) {
+                            this.x -= this.speed;
+                            this.pose = 9;
+                            break;
+                       // }
+                    case 1:
+                        //if (alvo.x > this.x) {
+                            this.x += this.speed;
+                            this.pose = 11;
+                            break;
+                       // }
+                    case 0:
+                        //if (alvo.y < this.y) {
+                            this.y -= this.speed;
+                            this.pose = 8;
+                            break;
+                       // }
+
+                    case 2:
+                       // if (alvo.y > this.y) {
+                            this.y += this.speed;
+                            this.pose = 10;
+                            break;
+                        //}
+
+                }
+            }
+        }
+
+        function persegueSpawn(alvo) {
+            return function () {
+                if (Math.floor(this.x - mapa.SIZE / 2) % mapa.SIZE === 0 && Math.floor(this.y - mapa.SIZE / 2) % mapa.SIZE / 2 === 0) {
+                    var NPCcol = Math.floor(this.x / mapa.SIZE);
+                    var NPClin = Math.floor(this.y / mapa.SIZE);
+                    var valida = [];
+                    if (mapa.m[NPClin][NPCcol - 1] === 0 && this.direcaoNPC != 1) { valida.push(3); } // esquerda
+                    if (mapa.m[NPClin][NPCcol + 1] === 0 && this.direcaoNPC != 3) { valida.push(1); } // direita
+                    if (mapa.m[NPClin - 1][NPCcol] === 0 && this.direcaoNPC != 2) { valida.push(0); } // cima
+                    if (mapa.m[NPClin + 1][NPCcol] === 0 && this.direcaoNPC != 0) { valida.push(2); } // baixo
+
                     this.direcaoNPC = valida[Math.floor(Math.random() * valida.length)];
                 }
                 //console.log(this.direcaoNPC);
-                
-                                switch (this.direcaoNPC) {
-                
-                                    case 3:
-                                        this.x -= this.speed;
-                                        this.pose = 9;
-                                        break;
-                                     case 1:
-                                        this.x += this.speed;
-                                        this.pose = 11;
-                                        break;
-                                    case 0:
-                                        this.y -= this.speed;
-                                        this.pose = 8;
-                                        break;
-                                    case 2:
-                                        this.y += this.speed;
-                                        this.pose = 10;
-                                        break;/**/
-                
-                                }
-                
-                                var dx = alvo.x - this.x;
-                                var dy = alvo.y - this.y;
-                                var da = Math.sqrt(dx * dx + dy * dy);
-                                var adj = Math.PI / 2;
-                                var prod = (dx / da) *(dy / da) ;
-                                this.va = 2 * (prod - 0);
-                                //this.vm = 30;*/
+
+                switch (this.direcaoNPC) {
+
+                    case 3:
+                      //  if (alvo.x < this.x) {
+                            this.x -= this.speed;
+                            this.pose = 9;
+                            break;
+                     //   }
+                    case 1:
+                      //  if (alvo.x > this.x) {
+                            this.x += this.speed;
+                            this.pose = 11;
+                            break;
+                      //  }
+                    case 0:
+                     //   if (alvo.y < this.y) {
+                            this.y -= this.speed;
+                            this.pose = 8;
+                            break;
+                      //  }
+
+                    case 2:
+                     //   if (alvo.y > this.y) {
+                            this.y += this.speed;
+                            this.pose = 10;
+                            break;
+                     //   }
+
+                }
+
+
+                this.props.spawn -= (1 / 60);
+                if (this.props.spawn <= 0) {
+                    // console.log(this.props.spawn)
+                    this.props.spawn = 2;
+                    var novo = new Sprite({
+                        x: Math.floor(this.x / 32) * 32 - 16,
+                        y: Math.floor(this.y / 32) * 32 - 16,
+                        w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
+                        comportar: persegue3(alvo), props: { tipo: "npc" }, desenhar: desenhaNPC
+
+                    })
+                    this.scene.adicionar(novo);
+                };
             }
-        }
+        };
 
 
 
@@ -431,24 +518,27 @@
 
                 if (teclas.espaco && this.cooldown <= 0) {
 
-                    this.k = 120;
-                    this.f = 10;
+                    this.k = 60;
+                    this.f = 5;
                     // cria as flechas
-                    console.log(pc.frame/sizePC)
-                    
-                        var tiro = new Sprite({
-                            x: this.x - 15,
-                            y: this.y - 23,
-                            w: 5,
-                            h: 5,
-                            speed: 10,
-                            props: { tipo: "tiro" },
-                            comportar: vtiro,
-                            desenhar: desenhaArrow
-                        });
-                        this.scene.adicionar(tiro);
-                        this.cooldown = 0.9;
-                    
+                    console.log(pc.frame / sizePC)
+
+                    var tiro = new Sprite({
+                        x: this.x - 15,
+                        y: this.y - 23,
+                        w: 5,
+                        h: 5,
+                        speed: 10,
+                        props: { tipo: "tiro" },
+                        comportar: vtiro,
+                        desenhar: desenhaArrow
+                    });
+                    this.scene.adicionar(tiro);
+                    this.cooldown = 0.9;
+
+                }else{
+                     this.k = 40;
+                    this.f = 5;
                 }
 
             }
