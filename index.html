@@ -135,7 +135,7 @@
 
         //for (var k = 0; k < 1; k++) {
         var inimigo = new Sprite({
-            x: 256, y: 560, w: 32, h: 32, k: 80, f: 10, speed: 2, vm: 20, pose: 11, frame: 0, color: "red",
+            x: 272, y: 560, w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 11, frame: 0, color: "red",
             comportar: persegue3(pc), props: { tipo: "npc" }, desenhar: desenhaNPC
         });
         cena1.adicionar(inimigo);
@@ -215,19 +215,19 @@
             return function () {
                 //  console.log(this.x, this.y )
                 if (Math.floor(this.x - mapa.SIZE / 2) % mapa.SIZE === 0 && Math.floor(this.y - mapa.SIZE / 2) % mapa.SIZE / 2 === 0) {
-                }
                     var NPCcol = Math.floor(this.x / mapa.SIZE);
                     var NPClin = Math.floor(this.y / mapa.SIZE);
-                    console.log(mapa.m[NPClin][NPCcol-1]);
+                    //  console.log(mapa.m[NPClin][NPCcol-1]);
                     var valida = [];
-
+                    
                     if (mapa.m[NPClin][NPCcol - 1] === 0 && this.direcaoNPC != 1) { valida.push(3);} // esquerda
                     if (mapa.m[NPClin][NPCcol + 1] === 0 && this.direcaoNPC != 3) { valida.push(1); } // direita
                     if (mapa.m[NPClin - 1][NPCcol] === 0 && this.direcaoNPC != 2) { valida.push(0); } // cima
                     if (mapa.m[NPClin + 1][NPCcol] === 0 && this.direcaoNPC != 0) { valida.push(2); } // baixo
-
+                    
                     this.direcaoNPC = valida[Math.floor(Math.random() * valida.length)];
-                console.log(this.direcaoNPC);
+                }
+                //console.log(this.direcaoNPC);
                 
                                 switch (this.direcaoNPC) {
                 
@@ -249,7 +249,7 @@
                                         break;/**/
                 
                                 }
-                /*
+                
                                 var dx = alvo.x - this.x;
                                 var dy = alvo.y - this.y;
                                 var da = Math.sqrt(dx * dx + dy * dy);
