@@ -2,12 +2,15 @@ function Explosion(params = {}) {
     exemplo = {
         x: 0,
         y: 0,
+        l: 4,
+        c: 4,
+        image:"explosion",
         frame: 0,
         w: 64,
         h: 64,
         props: {
             tipo: "boom"
-        },
+        }, 
     }
     Object.assign(this, exemplo, params);
 }
@@ -26,9 +29,9 @@ Explosion.prototype.desenhar = function () {
     ctx.rotate(this.a + Math.PI / 2);
     var F = Math.floor(this.frame);
     ctx.drawImage(
-        this.scene.assets.img("explosion"),
-        (F % 4) * 64,
-        Math.floor(F / 4) * 64,
+        this.scene.assets.img(this.image),
+        (F % l) * 64,
+        Math.floor(F / c) * 64,
         64,
         64,
         -this.w / 2,

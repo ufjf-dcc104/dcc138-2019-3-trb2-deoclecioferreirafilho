@@ -28,12 +28,17 @@
         assetsMng.loadImage("grunchArrow", "assets/grunch_f.png");
         assetsMng.loadImage("ladygreen", "assets/ladygreen.png");
         assetsMng.loadImage("osos", "assets/osos.png");
+        assetsMng.loadImage("tefs", "assets/tefs.png");
+        assetsMng.loadImage("ork", "assets/ork.png");
         assetsMng.loadImage("arrow64", "assets/arrow64.png");
         assetsMng.loadAudio("explosion", "assets/explosion.mp3");
         assetsMng.loadAudio("florest", "assets/florest.mp3");
         assetsMng.loadImage("explosion", "assets/explosion.png");
         assetsMng.loadImage("fruits", "assets/fruits32.png");
-        assetsMng.loadAudio("shot", "assets/shoot.ogg");
+        assetsMng.loadImage("light", "assets/light64.png");
+        assetsMng.loadAudio("arrow", "assets/Arrow.mp3");
+        assetsMng.loadAudio("gum", "assets/Gum.mp3");
+        assetsMng.loadAudio("little", "assets/little.ogg");
 
         var imagensPC = "grunchArrow";
         var canvas = document.querySelector("canvas");
@@ -62,6 +67,9 @@
         var direcaoPC = 2;
         var sizePC = 64;
         var frutas = 0;
+        var pontos = 0;
+        var frutaMax = 10;
+        var tempo = 5;
         var direcaoNPC;
         /* = {
             esquerda: 3,
@@ -99,7 +107,12 @@
 
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
-        cena1.tocarMusica("florest");
+        //cena1.tocarMusica("florest");
+
+
+
+
+
 
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
@@ -108,17 +121,41 @@
 
 
         var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "White");
+        mensageInicio.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2);
         var mensagePausa = new mensagem(cena1.h / 2, "PAUSA", "White");
-        mensageInicio.x = Math.floor((canvas.width - (ctx.measureText(mensageInicio.text).width)) / 2);
-
+        mensagePausa.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2);
         mensagePausa.visible = false;
-        // mensages.push(mensageInicio);
-        mensages.push(mensagePausa);
+        var mensageFim = new mensagem(cena1.h / 2, "GAME OVER", "White");
+        mensageFim.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2);
+        mensageFim.visible = false;
         var mensagePlacar = new mensagem(20, "", "white");
         mensagePlacar.font = "bold 15px emulogic";
-        mensagePlacar.text = "FRUTAS: " + exibeTexto(frutas);
+        mensagePlacar.text = "FRUTAS:" + exibeTexto(frutas);
         mensagePlacar.x = 20;
+        mensages.push(mensagePausa);
+        mensages.push(mensageInicio);
         mensages.push(mensagePlacar);
+        mensages.push(mensageFim);
+        /* console.log(
+            Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2),
+            Math.floor(ctx.measureText(mensagePausa.text).width),
+            Math.floor(ctx.measureText(mensageInicio.text).width),
+            Math.floor(ctx.measureText(mensagePlacar.text).width),
+            cena1.w
+        ); */
+
+
+        var mensagePontos = new mensagem(20, "", "white");
+        mensagePontos.font = "bold 15px emulogic";
+        mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
+        mensagePontos.x = (cena1.w - ctx.measureText(mensagePontos.text).width) / 2;
+        mensages.push(mensagePontos);
+
+        var mensageTime = new mensagem(20, "", "white");
+        mensageTime.font = "bold 15px emulogic";
+        mensageTime.text = "TEMPO:" + exibeTexto(tempo);
+        mensageTime.x = cena1.w - (ctx.measureText(mensageTime.text).width + 100);
+        mensages.push(mensageTime);
 
 
 
@@ -128,7 +165,7 @@
             }
             if (valor < 100) {
                 return "0" + valor.toString();
-            } s
+            }
             return valor.toString();
         }
 
@@ -148,6 +185,8 @@
             comportar: persegueSpawn(pc), props: { tipo: "npc", spawn: 0 }, desenhar: desenhaNPC2
         });
         cena1.adicionar(inimigo2);
+
+
 
         function desenhaPC(ctx) {
             ctx.save();
@@ -175,6 +214,23 @@
         }
 
         function desenhaNPC() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            // ctx.rotate(this.a + Math.PI / 2);
+            ctx.drawImage(
+                this.scene.assets.img("ork"),
+                this.frame,
+                this.pose * 64,
+                sizePC,
+                sizePC,
+                -sizePC + 40,
+                -sizePC + 15,
+                sizePC - 15,
+                sizePC - 15
+            );
+            ctx.restore();
+        }
+        function desenhaNPC1() {
             ctx.save();
             ctx.translate(this.x, this.y);
             // ctx.rotate(this.a + Math.PI / 2);
@@ -255,30 +311,30 @@
                 switch (this.direcaoNPC) {
 
                     case 3:
-                       // if (alvo.x < this.x) {
-                            this.x -= this.speed;
-                            this.pose = 9;
-                            break;
-                       // }
+                        // if (alvo.x < this.x) {
+                        this.x -= this.speed;
+                        this.pose = 9;
+                        break;
+                    // }
                     case 1:
                         //if (alvo.x > this.x) {
-                            this.x += this.speed;
-                            this.pose = 11;
-                            break;
-                       // }
+                        this.x += this.speed;
+                        this.pose = 11;
+                        break;
+                    // }
                     case 0:
                         //if (alvo.y < this.y) {
-                            this.y -= this.speed;
-                            this.pose = 8;
-                            break;
-                       // }
+                        this.y -= this.speed;
+                        this.pose = 8;
+                        break;
+                    // }
 
                     case 2:
-                       // if (alvo.y > this.y) {
-                            this.y += this.speed;
-                            this.pose = 10;
-                            break;
-                        //}
+                        // if (alvo.y > this.y) {
+                        this.y += this.speed;
+                        this.pose = 10;
+                        break;
+                    //}
 
                 }
             }
@@ -302,30 +358,30 @@
                 switch (this.direcaoNPC) {
 
                     case 3:
-                      //  if (alvo.x < this.x) {
-                            this.x -= this.speed;
-                            this.pose = 9;
-                            break;
-                     //   }
+                        //  if (alvo.x < this.x) {
+                        this.x -= this.speed;
+                        this.pose = 9;
+                        break;
+                    //   }
                     case 1:
-                      //  if (alvo.x > this.x) {
-                            this.x += this.speed;
-                            this.pose = 11;
-                            break;
-                      //  }
+                        //  if (alvo.x > this.x) {
+                        this.x += this.speed;
+                        this.pose = 11;
+                        break;
+                    //  }
                     case 0:
-                     //   if (alvo.y < this.y) {
-                            this.y -= this.speed;
-                            this.pose = 8;
-                            break;
-                      //  }
+                        //   if (alvo.y < this.y) {
+                        this.y -= this.speed;
+                        this.pose = 8;
+                        break;
+                    //  }
 
                     case 2:
-                     //   if (alvo.y > this.y) {
-                            this.y += this.speed;
-                            this.pose = 10;
-                            break;
-                     //   }
+                        //   if (alvo.y > this.y) {
+                        this.y += this.speed;
+                        this.pose = 10;
+                        break;
+                    //   }
 
                 }
 
@@ -338,7 +394,7 @@
                         x: Math.floor(this.x / 32) * 32 - 16,
                         y: Math.floor(this.y / 32) * 32 - 16,
                         w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
-                        comportar: persegue3(alvo), props: { tipo: "npc" }, desenhar: desenhaNPC
+                        comportar: persegue3(alvo), props: { tipo: "npc" }, desenhar: desenhaNPC1
 
                     })
                     this.scene.adicionar(novo);
@@ -442,6 +498,32 @@
         portoque();
 
 
+
+        function intervaloJogo() {
+        };
+        var tempoJogo = setInterval(function () {
+            tempo--;
+            mensageTime.text = "TEMPO:" + exibeTexto(tempo);
+        }, 1000);
+
+
+        function verificaGameOver() {
+            if (fruta >= frutaMax || tempo < 1) {
+                gameOver();
+            }
+        };
+
+        function gameOver() {
+            clearInterval(tempoJogo);
+            cena1.estado = cena1.fim;
+            mensageFim.visible = true;
+        };
+
+
+
+
+
+
         var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, color: "blue", pose: 32, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
 
@@ -455,7 +537,6 @@
 
             // console.log(Math.abs(distX), somaWidth)
 
-
             if (Math.abs(distX) < somaWidth && Math.abs(distY) < somaHeight) {
 
                 var overlapX = somaWidth - Math.abs(distX);
@@ -464,7 +545,10 @@
                 if (overlapX > overlapY || overlapX < overlapY) {
 
                     frutas++;
-                    mensagePlacar.text = "FRUTAS: " + exibeTexto(frutas);
+                    pontos += 5;
+
+                    mensagePlacar.text = "FRUTAS:" + exibeTexto(frutas);
+                    mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
 
                     novaFruta.posicao = novaPosicao();
                     fruta.x = novaFruta.posicao.x
@@ -520,8 +604,7 @@
                     this.k = 60;
                     this.f = 5;
                     // cria as flechas
-                    console.log(pc.frame / sizePC)
-
+                    cena1.assets.play("arrow")
                     var tiro = new Sprite({
                         x: this.x - 15,
                         y: this.y - 23,
@@ -535,8 +618,8 @@
                     this.scene.adicionar(tiro);
                     this.cooldown = 0.9;
 
-                }else{
-                     this.k = 40;
+                } else {
+                    this.k = 40;
                     this.f = 5;
                 }
 
@@ -605,9 +688,28 @@
                 case 40:
                     teclas.baixo = 0;
                     break;
+                case 13: //enter
+                    if (cena1.estado !== cena1.inicio) {
+                        cena1.estado = cena1.inicio;
+                        mensagePausa.visible = false;
+                        mensageInicio.visible = false;
+
+
+                    } else {
+                        cena1.estado = cena1.pausa;
+                        mensagePausa.visible = true;
+
+                    }
+                    break;
+                default:
+                    break;
             }
         });
 
+
+        // var tema = cena1.assets.play("little")
+
+        // cena1.tocarMusica("little");
 
 
         function passo(t) {
@@ -616,13 +718,12 @@
                 cena1.passo(dt);
             }
             anterior = t;
+            verificaGameOver();
             ctx.fillStyle = "white";
             ctx.font = "20px verdana";
             ctx.fillText(Math.floor(1 / dt), 10, 100);
 
             requestAnimationFrame(passo);
-
-
         }
 
 

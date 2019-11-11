@@ -65,13 +65,10 @@ Sprite.prototype.mover = function (dt) {
 
 Sprite.prototype.moverOrtogonal = function (dt) {
 
-    //this.x += this.speed;
-
-
     //this.a = this.a + this.va * dt;
 
-    //  this.vx = this.vm * Math.cos(this.a);
-    //  this.vy = this.vm * Math.sin(this.a);
+      this.vx = this.vm * Math.cos(this.a);
+      this.vy = this.vm * Math.sin(this.a);
 
     // this.x = this.x + this.vx * dt;
     // this.y = this.y + this.vy * dt;

@@ -1,12 +1,19 @@
 function Scene(params) {
     var exemplo = {
         sprites: [],
+        assets:[],
         toRemove: [],
         ctx: null,
         w: 640,
         h: 640,
         assets: null,
-        map: null
+        map: null,
+        cargaImg: 0,
+        carregando: 0,
+        estado: this.carregando,
+        inicio: 1,
+        pausa: 2,
+        fim: 3
     }
     Object.assign(this, exemplo, params);
 }
@@ -48,17 +55,19 @@ Scene.prototype.atualizar = function () {
                 this.ctx.font = mensagens.font;
                 this.ctx.fillStyle = mensagens.color;
                 this.ctx.texBaseline = mensagens.baseline;
-               // mensagens.x = (this.w - ctx.measureText(mensagens.text).width) / 2;
-                
+                // mensagens.x = (this.w - ctx.measureText(mensagens.text).width) / 2;
+
                 this.ctx.fillText(mensagens.text, mensagens.x, mensagens.y);
 
             }
         }
 }
 
-Scene.prototype.tocarMusica = function () {
-    this.assets.play("florest");
-    
+Scene.prototype.tocarMusica = function (assets) {
+    this.assets.play(assets);
+    assets.scene = this;
+    //this.sprites.push(sprite);
+   // sprite.scene = this;
 }
 
 Scene.prototype.adicionarMens = function () {
@@ -75,35 +84,35 @@ Scene.prototype.checaColisao = function () {
         if (this.sprites[i].morto) {
             this.toRemove.push(this.sprites[i]);
         }
-        
+
         if (this.sprites[i].props.tipo === "tiro"
             && (this.sprites[i].x > 640 || this.sprites[i].y > 640 ||
                 this.sprites[i].x < 0 || this.sprites[i].y < 0)) {
-                this.toRemove.push(this.sprites[i]);
-            }    
-        
+            this.toRemove.push(this.sprites[i]);
+        }
+
         for (var j = i + 1; j < this.sprites.length; j++) {
             if (this.sprites[i].colidiuCom(this.sprites[j])) {
                 if (this.sprites[i].props.tipo === "pc"
                     && this.sprites[j].props.tipo === "npc") {
                     this.toRemove.push(this.sprites[j]);
-                    this.adicionar(new Explosion({ x: this.sprites[j].x, y: this.sprites[j].y }));
-                    this.assets.play("explosion");
+                    this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
+                    this.assets.play("gum");
                 }
                 else
                     if (this.sprites[i].props.tipo === "npc"
                         && this.sprites[j].props.tipo === "tiro") {
                         this.toRemove.push(this.sprites[i]);
                         this.toRemove.push(this.sprites[j]);
-                        this.adicionar(new Explosion({ x: this.sprites[i].x, y: this.sprites[i].y }));
-                        this.assets.play("explosion");
-                    } 
+                        this.adicionar(new Explosion({ image: "light", l: 5, c: 5, x: this.sprites[i].x, y: this.sprites[i].y }));
+
+                        this.assets.play("gum");
+                    }
             }
         }
     }
 };
 
-    
 
 Scene.prototype.removeSprites = function () {
     for (var i = 0; i < this.toRemove.length; i++) {
@@ -115,6 +124,9 @@ Scene.prototype.removeSprites = function () {
     this.toRemove = [];
 };
 
+/* Scene.prototype.intervalo = function () {
+    this.Scene.intervaloJogo(this.ctx);
+} */
 Scene.prototype.desenharMapa = function () {
     this.map.desenhar(this.ctx);
 }
@@ -126,7 +138,25 @@ Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
     this.atualizar();
-    this.tocarMusica();
+    switch (this.estado) {
+        case this.carregando:
+            //   console.log(this.estado + ' Carregando...');
+            break;
+        case this.inicio:
+            this.posPasso(dt);
+            break;
+        case this.fim:
+
+            break;
+        default:
+            break;
+    }
+
+}
+
+Scene.prototype.posPasso = function (dt) {
+    //this.intervalo();
+   // this.tocarMusica();
     this.comportar();
     this.mover(dt);
     this.desenhar();
