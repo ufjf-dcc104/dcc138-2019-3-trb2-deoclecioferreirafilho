@@ -1,7 +1,16 @@
+var EstadoCena = {
+    CARRREGANDO: Symbol(),
+    EM_JOGO: Symbol(),
+    PAUSA: Symbol(),
+    FIM_TEMPO: Symbol(),
+    GAME_OVER: Symbol(),
+    INICIA_JOGO: Symbol(),
+    AGUARDA_INICIO: Symbol()
+}
 function Scene(params) {
     var exemplo = {
         sprites: [],
-        assets:[],
+        assets: [],
         toRemove: [],
         ctx: null,
         w: 640,
@@ -10,7 +19,7 @@ function Scene(params) {
         map: null,
         cargaImg: 0,
         carregando: 0,
-        estado: this.carregando,
+        estado: EstadoCena.CARRREGANDO,
         inicio: 1,
         pausa: 2,
         fim: 3
@@ -67,7 +76,7 @@ Scene.prototype.tocarMusica = function (assets) {
     this.assets.play(assets);
     assets.scene = this;
     //this.sprites.push(sprite);
-   // sprite.scene = this;
+    // sprite.scene = this;
 }
 
 Scene.prototype.adicionarMens = function () {
@@ -137,8 +146,80 @@ Scene.prototype.desenharMuro = function () {
 Scene.prototype.passo = function (dt) {
     this.limpar();
     this.desenharMapa();
+    this.desenhar();
     this.atualizar();
     switch (this.estado) {
+        case EstadoCena.CARRREGANDO:
+            var prog = this.assets.progresso();
+            if (prog < 100.0) {
+                console.log("Carregando...");
+                mensageCarregando.visible = true;
+                mensageCarregado.visible = false;
+            } else {
+                console.log("Carregado.");
+                mensageCarregando.visible = false;
+                mensageCarregado.visible = true;
+                this.estado = EstadoCena.AGUARDA_INICIO;
+            }
+
+            break;
+        case EstadoCena.EM_JOGO:
+            if (teclas.enter === 1) {
+                this.estado = EstadoCena.PAUSA;
+            }
+            this.posPasso(dt);
+            break;
+        case EstadoCena.PAUSA:
+            if (teclas.enter === 1) {
+                this.estado = EstadoCena.EM_JOGO;
+                mensagePausa.visible = false;
+                console.log("volta em jogo");
+            } else {
+                mensageCarregado.visible = false;
+                mensagePausa.visible = true;
+                 
+                //this.ctx.fillText(`EM PAUSA Pressione ENTER para voltar!`, 30, 130);
+            }
+            break;
+        case EstadoCena.FIM_TEMPO:
+
+            break;
+        case EstadoCena.INICIA_JOGO:
+
+            break;
+        case EstadoCena.GAME_OVER:
+
+            break;
+        case EstadoCena.AGUARDA_INICIO:
+            if (teclas.enter === 1 && this.estado != EstadoCena.PAUSA) {
+                this.estado = EstadoCena.EM_JOGO;
+                mensageInicio.visible = false;
+                console.log("Em jogo!!!");
+            } else {
+                mensageInicio.visible = true;
+                mensageCarregado.visible = false;
+                //this.ctx.fillText(`Pressione ENTER para comecar!`, 30, 130);
+            }
+
+            break;
+        default:
+            break;
+    }
+    this.desenhar();
+}
+
+Scene.prototype.posPasso = function (dt) {
+    //this.intervalo();
+    // this.tocarMusica();
+    this.comportar();
+    mensageTime.text = "TEMPO:" + exibeTexto(Math.floor(tempo -= dt));
+    this.mover(dt);
+    this.checaColisao();
+    this.removeSprites();
+}
+
+/*
+switch (this.estado) {
         case this.carregando:
             //   console.log(this.estado + ' Carregando...');
             break;
@@ -151,15 +232,4 @@ Scene.prototype.passo = function (dt) {
         default:
             break;
     }
-
-}
-
-Scene.prototype.posPasso = function (dt) {
-    //this.intervalo();
-   // this.tocarMusica();
-    this.comportar();
-    this.mover(dt);
-    this.desenhar();
-    this.checaColisao();
-    this.removeSprites();
-}
+*/

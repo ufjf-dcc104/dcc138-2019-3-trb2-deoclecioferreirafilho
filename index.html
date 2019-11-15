@@ -35,9 +35,10 @@
         assetsMng.loadAudio("florest", "assets/florest.mp3");
         assetsMng.loadImage("explosion", "assets/explosion.png");
         assetsMng.loadImage("fruits", "assets/fruits32.png");
+        assetsMng.loadImage("coin", "assets/coin.png");
         assetsMng.loadImage("light", "assets/light64.png");
-        assetsMng.loadAudio("arrow", "assets/Arrow.mp3");
-        assetsMng.loadAudio("gum", "assets/Gum.mp3");
+        assetsMng.loadAudio("arrow", "assets/arrow.mp3");
+        assetsMng.loadAudio("gum", "assets/gum.mp3");
         assetsMng.loadAudio("little", "assets/little.ogg");
 
         var imagensPC = "grunchArrow";
@@ -66,10 +67,10 @@
         var mensages = [];
         var direcaoPC = 2;
         var sizePC = 64;
-        var frutas = 0;
+        var moedas = 0;
         var pontos = 0;
         var frutaMax = 10;
-        var tempo = 5;
+        var tempo = 60;
         var direcaoNPC;
         /* = {
             esquerda: 3,
@@ -108,34 +109,37 @@
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
         //cena1.tocarMusica("florest");
-
-
-
-
-
-
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
         var pc = new Sprite({ x: 250, y: 200, k: 48, f: 6, w: 22, h: 5, speed: 2, pose: 10, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC });
         cena1.adicionar(pc);
 
 
+        var mensageCarregando = new mensagem(cena1.h / 2, "CARREGANDO...", "White");
+        mensageCarregando.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageCarregando.text).width))) / 2) - 100);
+        mensageCarregando.visible = false;
+        var mensageCarregado = new mensagem(cena1.h / 2, "CARREGADO!", "White");
+        mensageCarregado.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageCarregado.text).width))) / 2) - 100);
+        mensageCarregado.visible = false;
         var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "White");
-        mensageInicio.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2);
-        var mensagePausa = new mensagem(cena1.h / 2, "PAUSA", "White");
-        mensagePausa.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2);
+        mensageInicio.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2)-100);
+        mensageInicio.visible = false;
+        var mensagePausa = new mensagem(cena1.h / 2, "EM PAUSA - Pressione ENTER", "White");
+        mensagePausa.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2)-200);
         mensagePausa.visible = false;
         var mensageFim = new mensagem(cena1.h / 2, "GAME OVER", "White");
-        mensageFim.x = Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2);
+        mensageFim.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2) - 100);
         mensageFim.visible = false;
         var mensagePlacar = new mensagem(20, "", "white");
         mensagePlacar.font = "bold 15px emulogic";
-        mensagePlacar.text = "FRUTAS:" + exibeTexto(frutas);
+        mensagePlacar.text = "MOEDAS:" + exibeTexto(moedas);
         mensagePlacar.x = 20;
         mensages.push(mensagePausa);
         mensages.push(mensageInicio);
         mensages.push(mensagePlacar);
         mensages.push(mensageFim);
+        mensages.push(mensageCarregando);
+        mensages.push(mensageCarregado);
         /* console.log(
             Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2),
             Math.floor(ctx.measureText(mensagePausa.text).width),
@@ -441,7 +445,7 @@
         desenhaMuro();
 
 
-        function desenhaFruta() {
+        function desenhaFruta(dt) {
 
             ctx.save();
             ctx.translate(this.x, this.y);
@@ -449,8 +453,12 @@
             // ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
             // ctx.strokeStyle = "yellow";
             //  ctx.strokeRect(-this.w / 2, -this.h / 2, this.w, this.h);
+            var F = Math.floor(this.frame);
+            // console.log(Math.floor(F / 4) );
             ctx.drawImage(
-                this.scene.assets.img("fruits"),
+                this.scene.assets.img("coin"),
+                // (F % 3) * sizePC/2,
+                //  Math.floor(F / 4) * sizePC/2,
                 this.frame,
                 this.pose,
                 sizePC / 2,
@@ -498,36 +506,19 @@
         portoque();
 
 
-
-        function intervaloJogo() {
-        };
-        var tempoJogo = setInterval(function () {
-            tempo--;
-            mensageTime.text = "TEMPO:" + exibeTexto(tempo);
-        }, 1000);
-
-
         function verificaGameOver() {
             if (fruta >= frutaMax || tempo < 1) {
-                gameOver();
+                cena1.estado = cena1.fim;
+                mensageFim.visible = true;
+
             }
         };
 
-        function gameOver() {
-            clearInterval(tempoJogo);
-            cena1.estado = cena1.fim;
-            mensageFim.visible = true;
-        };
-
-
-
-
-
-
-        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, color: "blue", pose: 32, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
+        //var fruta = new Explosion({ image: "coin", w:32, h:32,l: 3, c: 3, x: novaFruta.posicao.x, y: novaFruta.posicao.y, mult: 8, size: 32, b: false, max: 10 });
+        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, k: 24, f: 8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
 
-        var frutas = 0;
+        var moedas = 0;
 
         function pegaFruta(pcA, muroB) {
             var distX = (pcA.x + pcA.w / 2) - (muroB.x + (muroB.w / 2));
@@ -544,10 +535,10 @@
 
                 if (overlapX > overlapY || overlapX < overlapY) {
 
-                    frutas++;
+                    moedas++;
                     pontos += 5;
 
-                    mensagePlacar.text = "FRUTAS:" + exibeTexto(frutas);
+                    mensagePlacar.text = "MOEDAS:" + exibeTexto(moedas);
                     mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
 
                     novaFruta.posicao = novaPosicao();
@@ -669,6 +660,11 @@
                 case 40:
                     teclas.baixo = 1;
                     break;
+                case 13: //enter
+                    teclas.enter = 1;
+                    break;
+                default:
+                    break;
             }
         });
         addEventListener("keyup", function (e) {
@@ -689,17 +685,7 @@
                     teclas.baixo = 0;
                     break;
                 case 13: //enter
-                    if (cena1.estado !== cena1.inicio) {
-                        cena1.estado = cena1.inicio;
-                        mensagePausa.visible = false;
-                        mensageInicio.visible = false;
-
-
-                    } else {
-                        cena1.estado = cena1.pausa;
-                        mensagePausa.visible = true;
-
-                    }
+                    teclas.enter = 0;
                     break;
                 default:
                     break;
@@ -707,6 +693,18 @@
         });
 
 
+        /* if (cena1.estado !== cena1.inicio) {
+             cena1.estado = cena1.inicio;
+             mensagePausa.visible = false;
+             mensageInicio.visible = false;
+
+
+         } else {
+             cena1.estado = cena1.pausa;
+             mensagePausa.visible = true;
+
+         }
+         */
         // var tema = cena1.assets.play("little")
 
         // cena1.tocarMusica("little");
@@ -714,15 +712,15 @@
 
         function passo(t) {
             dt = (t - anterior) / 1000;
-            if (assetsMng.progresso() === 100) {
-                cena1.passo(dt);
-            }
-            anterior = t;
+            cena1.passo(dt);
             verificaGameOver();
+
+
             ctx.fillStyle = "white";
             ctx.font = "20px verdana";
             ctx.fillText(Math.floor(1 / dt), 10, 100);
 
+            anterior = t;
             requestAnimationFrame(passo);
         }
 

@@ -20,6 +20,7 @@ function Sprite(params = {}) {
         pose: 3,
         speed: 0,
         frame: 0,
+        sizePC: 64,
         countAnim: 0,
         props: {},
         cooldown: 0,
@@ -59,7 +60,7 @@ Sprite.prototype.mover = function (dt) {
 
     this.countAnim++;
     if (this.countAnim >= this.k) { this.countAnim = 0 };
-    this.frame = Math.floor(this.countAnim / this.f) * 64;
+    this.frame = Math.floor(this.countAnim / this.f) * sizePC;
 
 }
 
@@ -67,8 +68,8 @@ Sprite.prototype.moverOrtogonal = function (dt) {
 
     //this.a = this.a + this.va * dt;
 
-      this.vx = this.vm * Math.cos(this.a);
-      this.vy = this.vm * Math.sin(this.a);
+    this.vx = this.vm * Math.cos(this.a);
+    this.vy = this.vm * Math.sin(this.a);
 
     // this.x = this.x + this.vx * dt;
     // this.y = this.y + this.vy * dt;

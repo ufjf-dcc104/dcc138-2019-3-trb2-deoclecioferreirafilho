@@ -42,7 +42,7 @@ AssetsManager.prototype.progresso = function () {
 
 
 AssetsManager.prototype.loadAudio = function (key, url) {
-    console.log(`Carregando audio ${key}: ${url}...`);
+   // console.log(`Carregando audio ${key}: ${url}...`);
     //this.aCarregar++;
     var audio = new Audio();
     audio.src = url;
