@@ -133,9 +133,10 @@ Scene.prototype.removeSprites = function () {
     this.toRemove = [];
 };
 
-/* Scene.prototype.intervalo = function () {
-    this.Scene.intervaloJogo(this.ctx);
-} */
+ Scene.prototype.intervalo = function () {
+    mensageTime.text = "TEMPO:" + exibeTexto(Math.floor(tempo -= dt));
+   // this.Scene.intervaloJogo(this.ctx);
+} 
 Scene.prototype.desenharMapa = function () {
     this.map.desenhar(this.ctx);
 }
@@ -209,10 +210,9 @@ Scene.prototype.passo = function (dt) {
 }
 
 Scene.prototype.posPasso = function (dt) {
-    //this.intervalo();
     // this.tocarMusica();
     this.comportar();
-    mensageTime.text = "TEMPO:" + exibeTexto(Math.floor(tempo -= dt));
+    this.intervalo();
     this.mover(dt);
     this.checaColisao();
     this.removeSprites();

@@ -70,7 +70,7 @@
         var moedas = 0;
         var pontos = 0;
         var frutaMax = 10;
-        var tempo = 60;
+        var tempo = 5;
         var direcaoNPC;
         /* = {
             esquerda: 3,
@@ -128,7 +128,7 @@
         mensagePausa.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2)-200);
         mensagePausa.visible = false;
         var mensageFim = new mensagem(cena1.h / 2, "GAME OVER", "White");
-        mensageFim.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2) - 100);
+        mensageFim.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2) - 50);
         mensageFim.visible = false;
         var mensagePlacar = new mensagem(20, "", "white");
         mensagePlacar.font = "bold 15px emulogic";
@@ -508,9 +508,8 @@
 
         function verificaGameOver() {
             if (fruta >= frutaMax || tempo < 1) {
-                cena1.estado = cena1.fim;
+                cena1.estado = EstadoCena.GAME_OVER;
                 mensageFim.visible = true;
-
             }
         };
 
