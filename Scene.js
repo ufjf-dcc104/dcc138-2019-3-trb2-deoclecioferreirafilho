@@ -133,10 +133,9 @@ Scene.prototype.removeSprites = function () {
     this.toRemove = [];
 };
 
- Scene.prototype.intervalo = function () {
+Scene.prototype.intervalo = function () {
     mensageTime.text = "TEMPO:" + exibeTexto(Math.floor(tempo -= dt));
-   // this.Scene.intervaloJogo(this.ctx);
-} 
+}
 Scene.prototype.desenharMapa = function () {
     this.map.desenhar(this.ctx);
 }
@@ -178,8 +177,6 @@ Scene.prototype.passo = function (dt) {
             } else {
                 mensageCarregado.visible = false;
                 mensagePausa.visible = true;
-                 
-                //this.ctx.fillText(`EM PAUSA Pressione ENTER para voltar!`, 30, 130);
             }
             break;
         case EstadoCena.FIM_TEMPO:
@@ -206,7 +203,7 @@ Scene.prototype.passo = function (dt) {
         default:
             break;
     }
-    this.desenhar();
+    //this.desenhar();
 }
 
 Scene.prototype.posPasso = function (dt) {
@@ -217,19 +214,3 @@ Scene.prototype.posPasso = function (dt) {
     this.checaColisao();
     this.removeSprites();
 }
-
-/*
-switch (this.estado) {
-        case this.carregando:
-            //   console.log(this.estado + ' Carregando...');
-            break;
-        case this.inicio:
-            this.posPasso(dt);
-            break;
-        case this.fim:
-
-            break;
-        default:
-            break;
-    }
-*/
