@@ -30,6 +30,7 @@
         assetsMng.loadImage("osos", "assets/osos.png");
         assetsMng.loadImage("tefs", "assets/tefs.png");
         assetsMng.loadImage("ork", "assets/ork.png");
+        assetsMng.loadImage("frozzen", "assets/frozzen.png");
         assetsMng.loadImage("arrow64", "assets/arrow64.png");
         assetsMng.loadAudio("explosion", "assets/explosion.mp3");
         assetsMng.loadAudio("florest", "assets/florest.mp3");
@@ -69,15 +70,9 @@
         var sizePC = 64;
         var moedas = 0;
         var pontos = 0;
-        var frutaMax = 10;
-        var tempo = 5;
+        var moedaMax = 5;
+        var tempo = 60;
         var direcaoNPC;
-        /* = {
-            esquerda: 3,
-            direita: 1,
-            cima: 0,
-            baixo: 2
-        };*/
 
         var mapa = new Map({
             m:
@@ -124,6 +119,14 @@
         var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "White");
         mensageInicio.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2)-100);
         mensageInicio.visible = false;
+        var mensageInicio2 = new mensagem(cena1.h - 40, "O Grunch precisa recolher uma grande quantidade de moedas.", "White");
+        mensageInicio2.x = 30;
+        mensageInicio2.visible = false;
+        mensageInicio2.font = " 10px emulogic"; 
+        var mensageInicio3 = new mensagem(cena1.h - 20, "Ajude-o a recolher... mas cuidado com os inimigos!!!", "White");
+        mensageInicio3.x = 30;
+        mensageInicio3.visible = false;
+        mensageInicio3.font = " 10px emulogic"; 
         var mensagePausa = new mensagem(cena1.h / 2, "EM PAUSA - Pressione ENTER", "White");
         mensagePausa.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2)-200);
         mensagePausa.visible = false;
@@ -136,23 +139,17 @@
         mensagePlacar.x = 20;
         mensages.push(mensagePausa);
         mensages.push(mensageInicio);
+        mensages.push(mensageInicio2);
+        mensages.push(mensageInicio3);
         mensages.push(mensagePlacar);
         mensages.push(mensageFim);
         mensages.push(mensageCarregando);
         mensages.push(mensageCarregado);
-        /* console.log(
-            Math.floor((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2),
-            Math.floor(ctx.measureText(mensagePausa.text).width),
-            Math.floor(ctx.measureText(mensageInicio.text).width),
-            Math.floor(ctx.measureText(mensagePlacar.text).width),
-            cena1.w
-        ); */
-
-
+        
         var mensagePontos = new mensagem(20, "", "white");
         mensagePontos.font = "bold 15px emulogic";
         mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
-        mensagePontos.x = (cena1.w - ctx.measureText(mensagePontos.text).width) / 2;
+        mensagePontos.x = ((cena1.w - ctx.measureText(mensagePontos.text).width) / 2)-50;
         mensages.push(mensagePontos);
 
         var mensageTime = new mensagem(20, "", "white");
@@ -175,10 +172,10 @@
 
         // for (var k = 0; k < 10; k++) {
         var inimigo = new Sprite({
-            x: 272,
-            y: 560,
+            x: 336,
+            y: 592,
             w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
-            comportar: persegueSpawn(pc), props: { tipo: "npc", spawn: 0 }, desenhar: desenhaNPC
+            comportar: persegueSpawn(pc), props: { tipo: "epc", spawn: 0 }, desenhar: desenhaNPC
         });
         cena1.adicionar(inimigo);
 
@@ -186,11 +183,17 @@
             x: 592,
             y: 528,
             w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
-            comportar: persegueSpawn(pc), props: { tipo: "npc", spawn: 0 }, desenhar: desenhaNPC2
+            comportar: persegueSpawn(pc), props: { tipo: "epc", spawn: 0 }, desenhar: desenhaNPC2
         });
         cena1.adicionar(inimigo2);
 
-
+        var inimigo3 = new Sprite({
+            x: 112,
+            y: 528,
+            w: 32, h: 32, k: 48, f: 6, speed: 1, vm: 20, pose: 10, frame: 0,
+            comportar: persegueSpawn(pc), props: { tipo: "epc", spawn: 0 }, desenhar: desenhaNPC3
+        });
+        cena1.adicionar(inimigo3);
 
         function desenhaPC(ctx) {
             ctx.save();
@@ -218,6 +221,23 @@
         }
 
         function desenhaNPC() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            // ctx.rotate(this.a + Math.PI / 2);
+            ctx.drawImage(
+                this.scene.assets.img("frozzen"),
+                this.frame,
+                this.pose * 64,
+                sizePC,
+                sizePC,
+                -sizePC + 40,
+                -sizePC + 15,
+                sizePC - 15,
+                sizePC - 15
+            );
+            ctx.restore();
+        }
+        function desenhaNPC0() {
             ctx.save();
             ctx.translate(this.x, this.y);
             // ctx.rotate(this.a + Math.PI / 2);
@@ -257,6 +277,23 @@
             // ctx.rotate(this.a + Math.PI / 2);
             ctx.drawImage(
                 this.scene.assets.img("ladygreen"),
+                this.frame,
+                this.pose * 64,
+                sizePC,
+                sizePC,
+                -sizePC + 40,
+                -sizePC + 15,
+                sizePC - 15,
+                sizePC - 15
+            );
+            ctx.restore();
+        }
+        function desenhaNPC3() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            // ctx.rotate(this.a + Math.PI / 2);
+            ctx.drawImage(
+                this.scene.assets.img("tefs"),
                 this.frame,
                 this.pose * 64,
                 sizePC,
@@ -389,7 +426,6 @@
 
                 }
 
-
                 this.props.spawn -= (1 / 60);
                 if (this.props.spawn <= 0) {
                     // console.log(this.props.spawn)
@@ -457,16 +493,14 @@
             // console.log(Math.floor(F / 4) );
             ctx.drawImage(
                 this.scene.assets.img("coin"),
-                // (F % 3) * sizePC/2,
-                //  Math.floor(F / 4) * sizePC/2,
                 this.frame,
                 this.pose,
-                sizePC / 2,
-                sizePC / 2,
+                sizePC /2,
+                sizePC /2 ,
                 -sizePC + 50,
                 -sizePC + 32,
-                sizePC / 2,
-                sizePC / 2
+                sizePC /2,
+                sizePC /2
             );
             ctx.restore();
         }
@@ -487,8 +521,6 @@
             }
         }
 
-
-
         function novaPosicao() {
             var pos = posicaoFruta[Math.floor(Math.random() * posicaoFruta.length)];
             while (novaFruta.posicao === pos) {
@@ -501,20 +533,24 @@
 
             novaFruta = {};
             novaFruta.posicao = novaPosicao();
-
         }
         portoque();
 
 
-        function verificaGameOver() {
-            if (fruta >= frutaMax || tempo < 1) {
+        function verificaJogo() {
+            if (tempo < 1) {
                 cena1.estado = EstadoCena.GAME_OVER;
+                mensageFim.visible = true;
+            }
+
+            if (moedas >= moedaMax) {
+                cena1.estado = EstadoCena.FIM_TEMPO;
                 mensageFim.visible = true;
             }
         };
 
-        //var fruta = new Explosion({ image: "coin", w:32, h:32,l: 3, c: 3, x: novaFruta.posicao.x, y: novaFruta.posicao.y, mult: 8, size: 32, b: false, max: 10 });
-        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 5, k: 24, f: 8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
+        //var fruta = new Explosion({ image: "coin", w:32, h:32,l: 1, c: 1, x: novaFruta.posicao.x, y: novaFruta.posicao.y, mult: 8, size: 32, b: false, max: 10 });
+        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 32, k:40 , f:8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
 
         var moedas = 0;
@@ -547,8 +583,6 @@
 
             }
         }
-
-
 
         function porTeclasDirecionais(teclas) {
             return function () {
@@ -641,7 +675,6 @@
             ctx.restore();
         }
 
-
         addEventListener("keydown", function (e) {
             switch (e.keyCode) {
                 case 32:
@@ -712,7 +745,7 @@
         function passo(t) {
             dt = (t - anterior) / 1000;
             cena1.passo(dt);
-            verificaGameOver();
+            verificaJogo();
 
 
             ctx.fillStyle = "white";
@@ -722,12 +755,8 @@
             anterior = t;
             requestAnimationFrame(passo);
         }
-
-
         var dt, anterior = 0;
         requestAnimationFrame(passo);
-
-
     </script>
 </body>
 
