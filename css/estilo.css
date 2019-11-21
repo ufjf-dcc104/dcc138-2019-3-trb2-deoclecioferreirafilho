@@ -21,3 +21,9 @@ body{
 	visibility: hidden;
 	position: absolute;
 }
+
+canvas{
+	image-rendering: pixelated;
+}
+    
+

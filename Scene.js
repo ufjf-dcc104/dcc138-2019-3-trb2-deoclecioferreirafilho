@@ -102,19 +102,26 @@ Scene.prototype.checaColisao = function () {
 
         for (var j = i + 1; j < this.sprites.length; j++) {
             if (this.sprites[i].colidiuCom(this.sprites[j])) {
-                if (this.sprites[i].props.tipo === "pc"
-                    && this.sprites[j].props.tipo === "npc") {
+                if ((this.sprites[i].props.tipo === "pc"
+                    && this.sprites[j].props.tipo === "npc") ||(
+                    this.sprites[i].props.tipo === "pc"
+                    && this.sprites[j].props.tipo === "epc" ) ) {
                     this.toRemove.push(this.sprites[j]);
                     this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
                     this.assets.play("gum");
                 }
                 else
-                    if (this.sprites[i].props.tipo === "npc"
-                        && this.sprites[j].props.tipo === "tiro") {
+                    if ((this.sprites[i].props.tipo === "npc"
+                        && this.sprites[j].props.tipo === "tiro") ||
+                        (this.sprites[i].props.tipo === "epc"
+                        && this.sprites[j].props.tipo === "tiro")) {
+                        if (this.sprites[i].props.tipo === "epc"
+                            && this.sprites[j].props.tipo === "tiro")
+                            mensagePontos.text = "PONTOS:" + exibeTexto(pontos+=100);
+
                         this.toRemove.push(this.sprites[i]);
                         this.toRemove.push(this.sprites[j]);
                         this.adicionar(new Explosion({ image: "light", l: 5, c: 5, x: this.sprites[i].x, y: this.sprites[i].y }));
-
                         this.assets.play("gum");
                     }
             }
@@ -192,11 +199,14 @@ Scene.prototype.passo = function (dt) {
             if (teclas.enter === 1 && this.estado != EstadoCena.PAUSA) {
                 this.estado = EstadoCena.EM_JOGO;
                 mensageInicio.visible = false;
+                mensageInicio2.visible = false;
+                mensageInicio3.visible = false;
                 console.log("Em jogo!!!");
             } else {
-                mensageInicio.visible = true;
+                mensageInicio.visible = true; 
+                mensageInicio2.visible = true;
+                mensageInicio3.visible = true;
                 mensageCarregado.visible = false;
-                //this.ctx.fillText(`Pressione ENTER para comecar!`, 30, 130);
             }
 
             break;
