@@ -47,7 +47,6 @@ AssetsManager.prototype.loadAudio = function (key, url) {
     var audio = new Audio();
     audio.src = url;
     audio.load();
-    audio.src.loop = true;
     this.audios[key] = audio;
     var that = this;
     /*audio.addEventListener("canplay", function () {
@@ -71,6 +70,16 @@ AssetsManager.prototype.play = function (key) {
         }
 
     }
+}
+AssetsManager.prototype.pause = async function (key) {
+    if (!this.audios[key]) {
+        throw new Error(`Chave de audio inválida: ${key}!`);
+    }
+    for (var i = 0; i < this.MAX_CHANNELS; i++) {
+        var agora = new Date();
+       await this.channels[i].audio.pause();
+        if (this.channels[i].fim < agora.getTime()) {
+        }
 
-   
+    }
 }

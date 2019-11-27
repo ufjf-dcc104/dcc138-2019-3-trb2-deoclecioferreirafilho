@@ -70,13 +70,13 @@ Scene.prototype.atualizar = function () {
 
             }
         }
+
 }
 
 Scene.prototype.tocarMusica = function (assets) {
     this.assets.play(assets);
     assets.scene = this;
-    //this.sprites.push(sprite);
-    // sprite.scene = this;
+   // this.assets.play("little");
 }
 
 Scene.prototype.adicionarMens = function () {
@@ -159,11 +159,11 @@ Scene.prototype.passo = function (dt) {
         case EstadoCena.CARRREGANDO:
             var prog = this.assets.progresso();
             if (prog < 100.0) {
-                console.log("Carregando...");
+              //  console.log("Carregando...");
                 mensageCarregando.visible = true;
                 mensageCarregado.visible = false;
             } else {
-                console.log("Carregado.");
+               // console.log("Carregado.");
                 mensageCarregando.visible = false;
                 mensageCarregado.visible = true;
                 this.estado = EstadoCena.AGUARDA_INICIO;
@@ -180,7 +180,9 @@ Scene.prototype.passo = function (dt) {
             if (teclas.enter === 1) {
                 this.estado = EstadoCena.EM_JOGO;
                 mensagePausa.visible = false;
-                console.log("volta em jogo");
+               // this.assets.pause("little");
+               // cena1.tocarMusica("little")
+              //  console.log("volta em jogo");
             } else {
                 mensageCarregado.visible = false;
                 mensagePausa.visible = true;
@@ -201,6 +203,8 @@ Scene.prototype.passo = function (dt) {
                 mensageInicio.visible = false;
                 mensageInicio2.visible = false;
                 mensageInicio3.visible = false;
+                //cena1.tocarMusica("little");
+                this.assets.play("little");
                 console.log("Em jogo!!!");
             } else {
                 mensageInicio.visible = true; 
@@ -217,7 +221,7 @@ Scene.prototype.passo = function (dt) {
 }
 
 Scene.prototype.posPasso = function (dt) {
-    // this.tocarMusica();
+   // this.tocarMusica();
     this.comportar();
     this.intervalo();
     this.mover(dt);
