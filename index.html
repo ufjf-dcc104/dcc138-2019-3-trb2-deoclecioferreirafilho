@@ -33,13 +33,14 @@
         assetsMng.loadImage("ork", "assets/ork.png");
         assetsMng.loadImage("frozzen", "assets/frozzen.png");
         assetsMng.loadImage("arrow64", "assets/arrow64.png");
-        assetsMng.loadAudio("explosion", "assets/explosion.mp3");
-        assetsMng.loadAudio("florest", "assets/florest.mp3");
         assetsMng.loadImage("explosion", "assets/explosion.png");
         assetsMng.loadImage("fruits", "assets/fruits32.png");
+        assetsMng.loadImage("fire", "assets/campFire.png");
         assetsMng.loadImage("coin", "assets/coin.png");
         assetsMng.loadImage("light", "assets/light64.png");
         assetsMng.loadAudio("arrow", "assets/arrow.mp3");
+        assetsMng.loadAudio("florest", "assets/florest.mp3");
+        assetsMng.loadAudio("explosion", "assets/explosion.mp3");
         assetsMng.loadAudio("gum", "assets/gum.mp3");
         assetsMng.loadAudio("little", "assets/little.ogg");
         
@@ -90,7 +91,7 @@
                     [1, 8, 0, 0, 0, 0, 0, 0, 20, 25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 9],
                     [3, 6, 0, 0, 0, 9, 10, 0, 0, , 25, 0, 0, 0, 0, 0, 9, 10, 0, 11],
                     [1, 8, 0, 50, 0, 11, 12, 0, 0, 0, 0, 50, 0, 0, 0, 0, 11, 12, 0, 9],
-                    [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11],
+                    [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 11],
                     [31, 0, 0, 0, 0, 34, 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
                     [31, 0, 0, 17, 34, 34, 0, 0, 0, 0, 9, 10, 0, 0, 0, 0, 0, 0, 0, 7],
                     [35, 36, 0, 19, 50, 0, 0, 0, 0, 9, 13, 14, 10, 0, 22, 0, 0, 0, 0, 5],
@@ -482,6 +483,27 @@
         }
         desenhaMuro();
 
+            var fire = new Sprite({ x: 464, y: 384, w: 32, h: 32, k: 40, f: 8, sizePC: 48, pose: 0, frame: 0, props: { tipo: "fire" }, desenhar: desenhaFire });
+            cena1.adicionar(fire);
+
+        function desenhaFire(dt) {
+
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            var F = Math.floor(this.frame);
+            ctx.drawImage(
+                this.scene.assets.img("fire"),
+                this.frame,
+                this.pose,
+                sizePC ,
+                sizePC  ,
+                -sizePC + 50,
+                -sizePC + 32,
+                sizePC/2,
+                sizePC/2
+            );
+            ctx.restore();
+        }
 
         function desenhaFruta(dt) {
 
@@ -551,7 +573,9 @@
             }
         };
 
-        //var fruta = new Explosion({ image: "coin", w:32, h:32,l: 1, c: 1, x: novaFruta.posicao.x, y: novaFruta.posicao.y, mult: 8, size: 32, b: false, max: 10 });
+       
+
+        
         var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 32, k:40 , f:8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
 

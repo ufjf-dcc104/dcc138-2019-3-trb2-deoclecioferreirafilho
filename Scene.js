@@ -106,9 +106,14 @@ Scene.prototype.checaColisao = function () {
                     && this.sprites[j].props.tipo === "npc") ||(
                     this.sprites[i].props.tipo === "pc"
                     && this.sprites[j].props.tipo === "epc" ) ) {
-                    this.toRemove.push(this.sprites[j]);
+                    this.toRemove.push(this.sprites[i]);
                     this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
                     this.assets.play("gum");
+                    
+                    /*this.toRemove.push(this.sprites[j]);
+                    this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
+                    this.assets.play("gum");*/
+
                 }
                 else
                     if ((this.sprites[i].props.tipo === "npc"

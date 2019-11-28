@@ -652,6 +652,21 @@ Map.prototype.desenhar = function (ctx) {
                     );
                     break;
                 
+                case 39:
+                    x = 0;
+                    y = 0;
+                    ctx.drawImage(this.scene.assets.img("fire"),
+                        x * 32,
+                        y * 32,
+                        64,
+                        64,
+                        c * this.SIZE,
+                        l * this.SIZE,
+                        this.SIZE,
+                        this.SIZE
+                    );
+                    break;
+                
                 default:
                     cor = "black";
             }
