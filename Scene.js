@@ -76,7 +76,10 @@ Scene.prototype.atualizar = function () {
 Scene.prototype.tocarMusica = function (assets) {
     this.assets.play(assets);
     assets.scene = this;
-   // this.assets.play("little");
+}
+Scene.prototype.pausarMusica = function (assets) {
+    this.assets.pause(assets);
+    assets.scene = this;
 }
 
 Scene.prototype.adicionarMens = function () {
@@ -108,7 +111,10 @@ Scene.prototype.checaColisao = function () {
                     && this.sprites[j].props.tipo === "epc" ) ) {
                     this.toRemove.push(this.sprites[i]);
                     this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
-                    this.assets.play("gum");
+                    this.assets.play("cut");
+                    this.estado = EstadoCena.GAME_OVER;
+                    mensageFim.visible = true;
+                    this.assets.pause("little");
                     
                     /*this.toRemove.push(this.sprites[j]);
                     this.adicionar(new Explosion({ image: "light", x: this.sprites[j].x, y: this.sprites[j].y }));
@@ -176,17 +182,17 @@ Scene.prototype.passo = function (dt) {
 
             break;
         case EstadoCena.EM_JOGO:
-            if (teclas.enter === 1) {
+            if (teclas.end === 1) {
                 this.estado = EstadoCena.PAUSA;
             }
             this.posPasso(dt);
             break;
         case EstadoCena.PAUSA:
-            if (teclas.enter === 1) {
+            if (teclas.enter === 1 && this.estado != EstadoCena.AGUARDA_INICIO)  {
                 this.estado = EstadoCena.EM_JOGO;
                 mensagePausa.visible = false;
-               // this.assets.pause("little");
-               // cena1.tocarMusica("little")
+               //this.assets.pause("little");
+               this.pausarMusica("little")
               //  console.log("volta em jogo");
             } else {
                 mensageCarregado.visible = false;
@@ -203,14 +209,15 @@ Scene.prototype.passo = function (dt) {
 
             break;
         case EstadoCena.AGUARDA_INICIO:
-            if (teclas.enter === 1 && this.estado != EstadoCena.PAUSA) {
+            if (teclas.enter === 1) {
                 this.estado = EstadoCena.EM_JOGO;
                 mensageInicio.visible = false;
                 mensageInicio2.visible = false;
                 mensageInicio3.visible = false;
-                //cena1.tocarMusica("little");
-                this.assets.play("little");
+                this.tocarMusica("little");
+                //this.assets.play("little");
                 console.log("Em jogo!!!");
+             
             } else {
                 mensageInicio.visible = true; 
                 mensageInicio2.visible = true;

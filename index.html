@@ -42,6 +42,8 @@
         assetsMng.loadAudio("florest", "assets/florest.mp3");
         assetsMng.loadAudio("explosion", "assets/explosion.mp3");
         assetsMng.loadAudio("gum", "assets/gum.mp3");
+        assetsMng.loadAudio("coing", "assets/coin.ogg");
+        assetsMng.loadAudio("cut", "assets/cut.ogg");
         assetsMng.loadAudio("little", "assets/little.ogg");
         
 
@@ -106,7 +108,7 @@
 
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
-        //cena1.tocarMusica("florest");
+        
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
         var pc = new Sprite({ x: 250, y: 200, k: 48, f: 6, w: 22, h: 5, speed: 2, pose: 10, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC });
@@ -598,6 +600,7 @@
 
                     moedas++;
                     pontos += 5;
+                    cena1.assets.play("coing");
 
                     mensagePlacar.text = "MOEDAS:" + exibeTexto(moedas);
                     mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
@@ -721,6 +724,9 @@
                 case 13: //enter
                     teclas.enter = 1;
                     break;
+                 case 35: //end
+                    teclas.end = 1;
+                    break;
                 default:
                     break;
             }
@@ -745,15 +751,13 @@
                 case 13: //enter
                     teclas.enter = 0;
                     break;
+                case 35: //end
+                    teclas.end = 0;
+                    break;
                 default:
                     break;
             }
         });
-
-
-        // var tema = cena1.assets.play("little")
-
-       // cena1.tocarMusica("little");
 
 
         function passo(t) {

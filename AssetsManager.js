@@ -1,8 +1,8 @@
 function AssetsManager() {
     this.aCarregar = 0;
     this.carregadas = 0;
-    this.volume = 0;
-    this.loop = false;
+    //this.volume = 0;
+    //this.loop = false;
     this.images = {};
     this.audios = {};
     this.channels = [];
@@ -71,15 +71,26 @@ AssetsManager.prototype.play = function (key) {
 
     }
 }
-AssetsManager.prototype.pause = async function (key) {
+AssetsManager.prototype.pause = function (key) {
     if (!this.audios[key]) {
         throw new Error(`Chave de audio inválida: ${key}!`);
     }
     for (var i = 0; i < this.MAX_CHANNELS; i++) {
         var agora = new Date();
-       await this.channels[i].audio.pause();
         if (this.channels[i].fim < agora.getTime()) {
+            this.channels[i].audio.pause();
+            break;
         }
 
     }
 }
+/*
+AssetsManager.prototype.pause = async function (key) {
+    if (!this.audios[key]) {
+        throw new Error(`Chave de audio inválida: ${key}!`);
+    }
+    for (var i = 0; i < this.MAX_CHANNELS; i++) {
+       await this.channels[i].audio.pause();
+    }
+}
+*/
