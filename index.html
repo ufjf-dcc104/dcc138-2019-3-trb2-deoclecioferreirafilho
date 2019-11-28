@@ -12,13 +12,14 @@
     <script src="AssetsManager.js"></script>
     <script src="Map.js"></script>
     <script src="Explosion.js"></script>
+    <script src="InputController.js"></script>
 
 </head>
 
 <body>
     <p class="hidden">F</p>
     <canvas></canvas>
-    
+
     <script>
         var assetsMng = new AssetsManager();
         assetsMng.loadImage("image", "assets/blowharder.png");
@@ -45,7 +46,7 @@
         assetsMng.loadAudio("coing", "assets/coin.ogg");
         assetsMng.loadAudio("cut", "assets/cut.ogg");
         assetsMng.loadAudio("little", "assets/little.ogg");
-        
+
 
         var imagensPC = "grunchArrow";
         var canvas = document.querySelector("canvas");
@@ -59,6 +60,23 @@
             baixo: 0,
             espaco: 0
         }
+
+        var input = new InputController();
+        input.setupKeyboard([
+            { nome: "enter", codigo: 13 },
+            { nome: "espaco", codigo: 32 },
+            { nome: "end", codigo: 35 },
+            { nome: "esquerda", codigo: 37 },
+            { nome: "cima", codigo: 38 },
+            { nome: "direita", codigo: 39 },
+            { nome: "baixo", codigo: 40 },
+            { nome: "a", codigo: 65 },
+            { nome: "d", codigo: 68 },
+            { nome: "s", codigo: 83 },
+            { nome: "w", codigo: 87 },
+        ]);
+        input.setupJoysticks();
+
 
         var mensagem = function (y, text, color) {
             this.x = 0;
@@ -108,7 +126,7 @@
 
         var cena1 = new Scene({ ctx: ctx, w: canvas.width, h: canvas.height, assets: assetsMng, map: mapa });
         mapa.scene = cena1;
-        
+
         var boom = new Explosion({ x: 100, y: 100, w: 64, h: 64 });
 
         var pc = new Sprite({ x: 250, y: 200, k: 48, f: 6, w: 22, h: 5, speed: 2, pose: 10, frame: 0, comportar: porTeclasDirecionais(teclas), props: { tipo: "pc" }, desenhar: desenhaPC });
@@ -122,18 +140,18 @@
         mensageCarregado.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageCarregado.text).width))) / 2) - 100);
         mensageCarregado.visible = false;
         var mensageInicio = new mensagem(cena1.h / 2, "ENTER INICIAR", "White");
-        mensageInicio.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2)-100);
+        mensageInicio.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageInicio.text).width))) / 2) - 100);
         mensageInicio.visible = false;
         var mensageInicio2 = new mensagem(cena1.h - 40, "O Grunch precisa recolher uma grande quantidade de moedas.", "White");
         mensageInicio2.x = 30;
         mensageInicio2.visible = false;
-        mensageInicio2.font = " 10px emulogic"; 
+        mensageInicio2.font = " 10px emulogic";
         var mensageInicio3 = new mensagem(cena1.h - 20, "Ajude-o a recolher... mas cuidado com os inimigos!!!", "White");
         mensageInicio3.x = 30;
         mensageInicio3.visible = false;
-        mensageInicio3.font = " 10px emulogic"; 
+        mensageInicio3.font = " 10px emulogic";
         var mensagePausa = new mensagem(cena1.h / 2, "EM PAUSA - Pressione ENTER", "White");
-        mensagePausa.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2)-200);
+        mensagePausa.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensagePausa.text).width))) / 2) - 200);
         mensagePausa.visible = false;
         var mensageFim = new mensagem(cena1.h / 2, "GAME OVER", "White");
         mensageFim.x = Math.floor(((cena1.w - (Math.floor(ctx.measureText(mensageFim.text).width))) / 2) - 50);
@@ -150,11 +168,11 @@
         mensages.push(mensageFim);
         mensages.push(mensageCarregando);
         mensages.push(mensageCarregado);
-        
+
         var mensagePontos = new mensagem(20, "", "white");
         mensagePontos.font = "bold 15px emulogic";
         mensagePontos.text = "PONTOS:" + exibeTexto(pontos);
-        mensagePontos.x = ((cena1.w - ctx.measureText(mensagePontos.text).width) / 2)-50;
+        mensagePontos.x = ((cena1.w - ctx.measureText(mensagePontos.text).width) / 2) - 50;
         mensages.push(mensagePontos);
 
         var mensageTime = new mensagem(20, "", "white");
@@ -485,8 +503,8 @@
         }
         desenhaMuro();
 
-            var fire = new Sprite({ x: 464, y: 384, w: 32, h: 32, k: 40, f: 8, sizePC: 48, pose: 0, frame: 0, props: { tipo: "fire" }, desenhar: desenhaFire });
-            cena1.adicionar(fire);
+        var fire = new Sprite({ x: 464, y: 384, w: 32, h: 32, k: 40, f: 8, sizePC: 48, pose: 0, frame: 0, props: { tipo: "fire" }, desenhar: desenhaFire });
+        cena1.adicionar(fire);
 
         function desenhaFire(dt) {
 
@@ -497,12 +515,12 @@
                 this.scene.assets.img("fire"),
                 this.frame,
                 this.pose,
-                sizePC ,
-                sizePC  ,
+                sizePC,
+                sizePC,
                 -sizePC + 50,
                 -sizePC + 32,
-                sizePC/2,
-                sizePC/2
+                sizePC / 2,
+                sizePC / 2
             );
             ctx.restore();
         }
@@ -521,12 +539,12 @@
                 this.scene.assets.img("coin"),
                 this.frame,
                 this.pose,
-                sizePC /2,
-                sizePC /2 ,
+                sizePC / 2,
+                sizePC / 2,
                 -sizePC + 50,
                 -sizePC + 32,
-                sizePC /2,
-                sizePC /2
+                sizePC / 2,
+                sizePC / 2
             );
             ctx.restore();
         }
@@ -575,10 +593,10 @@
             }
         };
 
-       
 
-        
-        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 32, k:40 , f:8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
+
+
+        var fruta = new Sprite({ x: novaFruta.posicao.x, y: novaFruta.posicao.y, w: 32, h: 32, k: 40, f: 8, sizePC: 32, pose: 0, frame: 0, props: { tipo: "fruta" }, desenhar: desenhaFruta });
         cena1.adicionar(fruta);
 
         var moedas = 0;
@@ -724,7 +742,7 @@
                 case 13: //enter
                     teclas.enter = 1;
                     break;
-                 case 35: //end
+                case 35: //end
                     teclas.end = 1;
                     break;
                 default:
@@ -768,9 +786,33 @@
 
             ctx.fillStyle = "white";
             ctx.font = "20px verdana";
-            ctx.fillText(Math.floor(1 / dt), 10, 100);
+            ctx.fillText(Math.floor(1 / dt) + "s", 600, 50);
 
             anterior = t;
+
+
+            input.updateJoysticks();
+
+            ctx.font = "10px arial";
+            var l = 2;
+            for (var nome in input.teclas) {
+                var tecla = input.teclas[nome];
+                ctx.fillText(`${nome}: ${input.teclas[nome]}`, 3, 20 * l++);
+            }
+            var l = 2;
+            var jn = 1;
+            for (var j in input.joysticks) {
+                var joystick = input.joysticks[j];
+                for (var bid in joystick.buttons) {
+                    var button = joystick.buttons[bid];
+                    ctx.fillText(`b${bid}: ${button.pressed}`, 150 * jn, 20 * l++);
+                }
+                for (var aid in joystick.axes) {
+                    var axis = joystick.axes[aid];
+                    ctx.fillText(`a${aid}: ${axis}`, 150 * jn, 20 * l++);
+                }
+            }
+
             requestAnimationFrame(passo);
         }
         var dt, anterior = 0;

@@ -1,8 +1,6 @@
 function AssetsManager() {
     this.aCarregar = 0;
     this.carregadas = 0;
-    //this.volume = 0;
-    //this.loop = false;
     this.images = {};
     this.audios = {};
     this.channels = [];
@@ -42,18 +40,11 @@ AssetsManager.prototype.progresso = function () {
 
 
 AssetsManager.prototype.loadAudio = function (key, url) {
-   // console.log(`Carregando audio ${key}: ${url}...`);
-    //this.aCarregar++;
     var audio = new Audio();
     audio.src = url;
     audio.load();
     this.audios[key] = audio;
-    var that = this;
-    /*audio.addEventListener("canplay", function () {
-        //that.carregadas++;
-        console.log(`Audio ${that.carregadas}/${that.aCarregar} ${key}: ${url} carregado.`);
-    });
-    */
+    
 }
 
 AssetsManager.prototype.play = function (key) {
