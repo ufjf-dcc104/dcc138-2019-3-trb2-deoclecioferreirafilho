@@ -37,13 +37,13 @@ InputController.prototype.setupJoysticks = function () {
     var that = this;
     addEventListener("gamepadconnected", function (e) {
         var gamepad = e.gamepad;
-        console.log(`${gamepad.id} connected!`);
+        console.log(`${gamepad.id} Conectado!`);
         that.joysticks[gamepad.index] = gamepad;
 
     });
     addEventListener("gamepaddisconnected", function (e) {
         var gamepad = e.gamepad;
-        console.log(`${gamepad.id} disconnected!`);
+        console.log(`${gamepad.id} Disconectado!`);
         delete that.joysticks[gamepad.index];
 
     });

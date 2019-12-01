@@ -182,13 +182,13 @@ Scene.prototype.passo = function (dt) {
 
             break;
         case EstadoCena.EM_JOGO:
-            if (teclas.end === 1) {
+            if (input.teclas.end || input.joysticks[0].buttons[3].pressed) {
                 this.estado = EstadoCena.PAUSA;
             }
             this.posPasso(dt);
             break;
         case EstadoCena.PAUSA:
-            if (teclas.enter === 1 && this.estado != EstadoCena.AGUARDA_INICIO)  {
+            if ((input.teclas.enter || input.joysticks[0].buttons[1].pressed) && this.estado != EstadoCena.AGUARDA_INICIO)  {
                 this.estado = EstadoCena.EM_JOGO;
                 mensagePausa.visible = false;
                //this.assets.pause("little");
@@ -206,10 +206,10 @@ Scene.prototype.passo = function (dt) {
 
             break;
         case EstadoCena.GAME_OVER:
-
+            
             break;
         case EstadoCena.AGUARDA_INICIO:
-            if (teclas.enter === 1) {
+            if ((input.teclas.enter ) && this.estado != EstadoCena.PAUSA)     {
                 this.estado = EstadoCena.EM_JOGO;
                 mensageInicio.visible = false;
                 mensageInicio2.visible = false;

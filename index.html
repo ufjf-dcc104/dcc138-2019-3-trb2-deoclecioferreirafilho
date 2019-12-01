@@ -53,6 +53,7 @@
         canvas.width = 640;
         canvas.height = 640;
         var ctx = canvas.getContext("2d");
+        
         var teclas = {
             esquerda: 0,
             cima: 0,
@@ -93,8 +94,8 @@
         var sizePC = 64;
         var moedas = 0;
         var pontos = 0;
-        var moedaMax = 5;
-        var tempo = 60;
+        var moedaMax = 10;
+        var tempo = 120;
         var direcaoNPC;
 
         var mapa = new Map({
@@ -634,28 +635,30 @@
         function porTeclasDirecionais(teclas) {
             return function () {
 
-                if (teclas.esquerda && !teclas.direita) {
+                if ((input.teclas.esquerda && !input.teclas.direita) || (input.joysticks[0].axes[0] === -1)) {
                     this.x -= this.speed;
                     this.pose = 9;
                     direcaoPC = 1;
                 }
-                if (teclas.direita && !teclas.esquerda) {
+                if ((input.teclas.direita && !input.teclas.esquerda) || (input.joysticks[0].axes[0] === 1)) {
                     this.x += this.speed;
                     this.pose = 11;
                     direcaoPC = 3;
                 }
 
-                if (teclas.cima && !teclas.baixo) {
+                if ((input.teclas.cima && !input.teclas.baixo) || (input.joysticks[0].axes[1] === -1)) {
                     this.y -= this.speed;
                     this.pose = 8;
                     direcaoPC = 0;
                 }
-                if (teclas.baixo && !teclas.cima) {
+                if ((input.teclas.baixo && !input.teclas.cima) || (input.joysticks[0].axes[1] === 1)) {
                     this.y += this.speed;
                     this.pose = 10;
                     direcaoPC = 2;
                 }
-                if (teclas.espaco || teclas.esquerda || teclas.direita || teclas.cima || teclas.baixo) {
+                //if (teclas.espaco || teclas.esquerda || teclas.direita || teclas.cima || teclas.baixo) {
+                if  ((input.joysticks[0].axes[0] === -1 || input.joysticks[0].axes[0] === 1 || input.joysticks[0].axes[1] === -1 || input.joysticks[0].axes[1] === 1) ||
+                    (input.teclas.espaco|| input.teclas.esquerda || input.teclas.direita || input.teclas.cima || input.teclas.baixo)) {
 
                     for (var i = 0; i < muros.length; i++) {
                         var muro = muros[i];
@@ -670,7 +673,8 @@
                     this.countAnim = 0;
                 }
 
-                if (teclas.espaco && this.cooldown <= 0) {
+               
+                if ((input.teclas.espaco || input.joysticks[0].buttons[7].pressed) && this.cooldown <= 0) {
 
                     this.k = 60;
                     this.f = 5;
@@ -721,7 +725,7 @@
             );
             ctx.restore();
         }
-
+/*
         addEventListener("keydown", function (e) {
             switch (e.keyCode) {
                 case 32:
@@ -776,7 +780,7 @@
                     break;
             }
         });
-
+*/
 
         function passo(t) {
             dt = (t - anterior) / 1000;
@@ -792,12 +796,12 @@
 
 
             input.updateJoysticks();
-
-            ctx.font = "10px arial";
+            
+            ctx.font = " 8px emulogic";
             var l = 2;
             for (var nome in input.teclas) {
                 var tecla = input.teclas[nome];
-                ctx.fillText(`${nome}: ${input.teclas[nome]}`, 3, 20 * l++);
+               // ctx.fillText(`${nome}:${input.teclas[nome]}`, 3, 20 * l++);
             }
             var l = 2;
             var jn = 1;
@@ -805,10 +809,11 @@
                 var joystick = input.joysticks[j];
                 for (var bid in joystick.buttons) {
                     var button = joystick.buttons[bid];
-                    ctx.fillText(`b${bid}: ${button.pressed}`, 150 * jn, 20 * l++);
+                    //ctx.fillText(`b${bid}: ${button.pressed}`, 150 * jn, 20 * l++);
                 }
                 for (var aid in joystick.axes) {
                     var axis = joystick.axes[aid];
+                   //
                     ctx.fillText(`a${aid}: ${axis}`, 150 * jn, 20 * l++);
                 }
             }
