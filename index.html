@@ -657,7 +657,7 @@
                     direcaoPC = 2;
                 }
                 //if (teclas.espaco || teclas.esquerda || teclas.direita || teclas.cima || teclas.baixo) {
-                if  ((input.joysticks[0].axes[0] === -1 || input.joysticks[0].axes[0] === 1 || input.joysticks[0].axes[1] === -1 || input.joysticks[0].axes[1] === 1) ||
+                if  ((input.joysticks[0].buttons[7].pressed || input.joysticks[0].axes[0] === -1 || input.joysticks[0].axes[0] === 1 || input.joysticks[0].axes[1] === -1 || input.joysticks[0].axes[1] === 1) ||
                     (input.teclas.espaco|| input.teclas.esquerda || input.teclas.direita || input.teclas.cima || input.teclas.baixo)) {
 
                     for (var i = 0; i < muros.length; i++) {
